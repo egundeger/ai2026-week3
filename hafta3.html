@@ -1,0 +1,1564 @@
+<title>UEC248 Hafta 3: Anlam ve Kural</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+/* Hafta 2 ile aynı tasarım dili: grafit + yosun + kiremit. Mavi yok. */
+:root{
+  --scale:1;
+  --paper:#efefec; --surface:#ffffff; --surface-2:#f7f7f3;
+  --ink:#1c1c19; --muted:#64635c; --line:#dbdad2; --heading:#242420;
+  --bar:#24241f; --on-bar:#f2f2ee; --bar-line:#8cc0a0;
+  --accent:#3c6b50; --accent-2:#2f5a42; --accent-soft:#e4ede7;
+  --clay:#99462a; --clay-soft:#f6e7df;
+  --code-bg:#1e1e1a; --code-ink:#e8e8e0; --code-cap:#a8a89c;
+  --display:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --body:"Instrument Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#161613; --surface:#1e1e1a; --surface-2:#25251f;
+    --ink:#eaeae2; --muted:#9c9b92; --line:#353530; --heading:#f0f0e8;
+    --bar:#0f0f0d; --on-bar:#efefe8; --bar-line:#7fb394;
+    --accent:#7fb394; --accent-2:#96c7a8; --accent-soft:#1e2e24;
+    --clay:#d98e6c; --clay-soft:#33221a;
+    --code-bg:#0e0e0c; --code-ink:#e6e6de; --code-cap:#9a9a90;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#161613; --surface:#1e1e1a; --surface-2:#25251f;
+  --ink:#eaeae2; --muted:#9c9b92; --line:#353530; --heading:#f0f0e8;
+  --bar:#0f0f0d; --on-bar:#efefe8; --bar-line:#7fb394;
+  --accent:#7fb394; --accent-2:#96c7a8; --accent-soft:#1e2e24;
+  --clay:#d98e6c; --clay-soft:#33221a;
+  --code-bg:#0e0e0c; --code-ink:#e6e6de; --code-cap:#9a9a90;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{font-size:calc(100% * var(--scale)); height:100%}
+body{margin:0; min-height:100%; background:var(--paper); color:var(--ink);
+  font-family:var(--body); line-height:1.65; -webkit-font-smoothing:antialiased}
+a{color:var(--accent)} a:hover{color:var(--accent-2)}
+button,input,select,textarea{font:inherit; color:inherit}
+:focus-visible{outline:3px solid var(--accent); outline-offset:2px; border-radius:4px}
+@media (prefers-reduced-motion: reduce){ *{animation:none !important; transition:none !important} }
+
+.topbar{position:sticky; top:env(safe-area-inset-top,0px); z-index:50;
+  background:var(--bar); color:var(--on-bar); padding:.6rem clamp(1rem,2.5vw,1.5rem);
+  display:flex; gap:1rem; align-items:center; flex-wrap:wrap; border-bottom:3px solid var(--bar-line)}
+.brand{display:flex; flex-direction:column; min-width:0; flex:1 1 260px}
+.brand .code{font-family:var(--display); font-weight:700; font-size:1.08rem; letter-spacing:.005em}
+.brand .code span{color:var(--bar-line)}
+.brand .sub{font-size:.79rem; opacity:.75; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.clock{display:flex; align-items:center; gap:.55rem; background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.16); border-radius:9px; padding:.3rem .6rem}
+.clock .t{font-family:var(--mono); font-size:1.1rem; min-width:4.4ch; text-align:right;
+  font-variant-numeric:tabular-nums}
+.clock .seg{font-size:.75rem; opacity:.8; max-width:18ch; line-height:1.2}
+.tb-btn{background:transparent; border:1px solid rgba(255,255,255,.3); color:var(--on-bar);
+  border-radius:7px; padding:.3rem .62rem; cursor:pointer; font-size:.84rem}
+.tb-btn:hover{background:rgba(255,255,255,.1)}
+.tb-btn[aria-pressed="true"]{background:var(--bar-line); color:#0f0f0d; border-color:var(--bar-line); font-weight:600}
+.tools{display:flex; gap:.4rem; align-items:center; flex-wrap:wrap}
+
+.app{display:grid; grid-template-columns:268px minmax(0,1fr)}
+.rail{position:sticky; top:calc(64px + env(safe-area-inset-top,0px)); align-self:start;
+  max-height:calc(100vh - 64px); overflow-y:auto; padding:1.2rem .85rem 2rem 1.05rem;
+  border-right:1px solid var(--line); background:var(--surface-2)}
+.rail h2{font-family:var(--display); font-weight:600; font-size:.98rem; margin:.2rem 0 .8rem; color:var(--heading)}
+.rail ol{list-style:none; margin:0; padding:0; position:relative}
+.rail ol::before{content:""; position:absolute; left:.92rem; top:.6rem; bottom:.6rem; width:1px; background:var(--line)}
+.rail li{position:relative}
+.rail button{width:100%; display:grid; grid-template-columns:1.95rem minmax(0,1fr); gap:.55rem;
+  align-items:start; text-align:left; background:none; border:0; padding:.4rem .3rem;
+  border-radius:8px; cursor:pointer; color:var(--ink)}
+.rail button:hover{background:var(--surface)}
+.rail .dot{width:1.85rem; height:1.85rem; border-radius:50%; display:grid; place-items:center;
+  background:var(--surface); border:1px solid var(--line); font-family:var(--mono);
+  font-size:.72rem; color:var(--muted); position:relative; z-index:1}
+.rail .lbl{display:flex; flex-direction:column; line-height:1.3; padding-top:.15rem; min-width:0}
+.rail .lbl b{font-weight:600; font-size:.89rem}
+.rail .lbl small{color:var(--muted); font-size:.74rem; font-variant-numeric:tabular-nums}
+.rail button[aria-current="step"] .dot{background:var(--accent); border-color:var(--accent); color:var(--surface)}
+.rail button[aria-current="step"] .lbl b{color:var(--accent)}
+.rail button.done .dot{border-color:var(--accent); color:var(--accent)}
+.rail .meta{margin-top:1.3rem; padding-top:1rem; border-top:1px solid var(--line); font-size:.79rem; color:var(--muted)}
+.rail .meta p{margin:.2rem 0}
+.mobile-nav{display:none}
+
+main{padding:1.8rem clamp(1rem,3vw,2.75rem) 4rem; min-width:0}
+.section{display:none; max-width:1040px}
+.section.active{display:block}
+.sec-head{margin-bottom:1.3rem}
+.sec-time{display:inline-block; font-size:.76rem; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--accent); font-weight:600; margin-bottom:.4rem; font-variant-numeric:tabular-nums}
+.sec-head h1{font-family:var(--display); font-weight:700; font-size:clamp(1.8rem,3.3vw,2.6rem);
+  line-height:1.15; margin:0 0 .5rem; color:var(--heading); letter-spacing:-.005em; text-wrap:balance}
+.lead{font-size:1.09rem; color:var(--muted); max-width:62ch; margin:0}
+.prose{max-width:66ch}
+.prose p{margin:.75rem 0}
+h2.h{font-family:var(--display); font-weight:600; font-size:1.42rem; color:var(--heading);
+  margin:2.1rem 0 .5rem; line-height:1.25; text-wrap:balance}
+h3.h{font-size:1.02rem; font-weight:600; margin:1.3rem 0 .35rem}
+ul.clean,ol.clean{padding-left:1.3rem; max-width:66ch}
+ul.clean li,ol.clean li{margin:.35rem 0}
+.term{font-weight:600}
+.muted{color:var(--muted)} .small{font-size:.86rem}
+
+body[data-mode="ogrenci"] .egitmen,
+body[data-mode="ogrenci"] .say,
+body[data-mode="ogrenci"] .note{display:none !important}
+body[data-mode="egitmen"] .ogrenci-only{display:none !important}
+.say,.note{max-width:72ch; margin:1rem 0; padding:.9rem 1.15rem; border-radius:0 10px 10px 0}
+.say{background:var(--accent-soft); border-left:4px solid var(--accent)}
+.say::before{content:"Söyleyin"; display:block; font-size:.72rem; font-weight:600;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--accent); margin-bottom:.35rem}
+.say p{margin:.55rem 0; font-size:1.02rem}
+.note{background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--heading)}
+.note::before{content:"Eğitmen notu"; display:block; font-size:.72rem; font-weight:600;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:.35rem}
+.note p{margin:.42rem 0}
+.note ul{margin:.3rem 0; padding-left:1.2rem}
+
+.bench{background:var(--surface); border:1px solid var(--line); border-radius:12px;
+  padding:1.15rem 1.3rem; margin:1.4rem 0}
+.bench > h3{margin:0 0 .25rem; font-family:var(--display); font-weight:600; font-size:1.18rem; color:var(--heading)}
+.bench > .hint{margin:0 0 1rem; color:var(--muted); font-size:.92rem; max-width:70ch}
+.bench.lab{border-top:3px solid var(--accent)}
+.bench.live{border-top:3px solid var(--clay)}
+.grid2{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem}
+.grid3{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem}
+.grid4{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.9rem}
+.tile{border:1px solid var(--line); border-radius:10px; padding:1rem; background:var(--surface-2); min-width:0}
+.tile h4{margin:0 0 .3rem; font-size:1rem}
+.tile p{margin:.28rem 0; font-size:.92rem}
+.tag{display:inline-block; font-size:.72rem; font-weight:600; letter-spacing:.04em;
+  padding:.14rem .55rem; border-radius:4px; background:var(--accent-soft); color:var(--accent); margin-right:.3rem}
+.tag.clay{background:var(--clay-soft); color:var(--clay)}
+.tag.plain{background:var(--surface-2); color:var(--muted); border:1px solid var(--line)}
+
+.btn{display:inline-flex; align-items:center; gap:.4rem; border-radius:7px; padding:.48rem .9rem;
+  border:1px solid var(--line); background:var(--surface); cursor:pointer; font-weight:500; font-size:.92rem}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent); color:var(--surface); border-color:var(--accent)}
+.btn.small{padding:.24rem .6rem; font-size:.82rem}
+.row{display:flex; gap:.6rem; flex-wrap:wrap; align-items:center}
+
+.timer{display:inline-flex; align-items:center; gap:.5rem; flex-wrap:wrap; border:1px solid var(--accent);
+  border-radius:9px; padding:.4rem .7rem; background:var(--accent-soft); margin:.7rem 0}
+.timer .tl{font-size:.8rem; color:var(--accent); font-weight:600}
+.timer .td{font-family:var(--mono); font-size:1.4rem; color:var(--accent); min-width:5.2ch;
+  text-align:center; font-variant-numeric:tabular-nums}
+.timer.ending .td{color:var(--clay)}
+.timer.over{border-color:var(--clay); background:var(--clay-soft)}
+.timer.over .td,.timer.over .tl{color:var(--clay)}
+.timer button{border:1px solid var(--accent); background:var(--surface); color:var(--accent);
+  border-radius:6px; padding:.18rem .55rem; cursor:pointer; font-size:.81rem}
+
+.codebox{position:relative; background:var(--code-bg); color:var(--code-ink); border-radius:10px;
+  padding:2.4rem 1.05rem 1rem; margin:.8rem 0; font-family:var(--mono); font-size:.85rem;
+  line-height:1.6; overflow-x:auto}
+.codebox pre{margin:0; white-space:pre-wrap; word-break:break-word}
+.codebox.code pre{white-space:pre; word-break:normal}
+.codebox .cap{display:block; font-family:var(--body); font-size:.76rem; color:var(--code-cap); margin-bottom:.45rem}
+.copy{position:absolute; top:.5rem; right:.5rem; background:rgba(255,255,255,.1); color:#fff;
+  border:1px solid rgba(255,255,255,.26); border-radius:6px; padding:.18rem .58rem; font-size:.75rem;
+  cursor:pointer; font-family:var(--body)}
+.copy.ok{background:var(--accent); border-color:var(--accent)}
+
+.hero{background:var(--surface); border:1px solid var(--line); border-top:3px solid var(--accent);
+  border-radius:12px; padding:clamp(1.25rem,3vw,2rem); margin:0 0 1.5rem}
+.hero .kicker{font-size:.74rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--muted); margin:0 0 .8rem}
+.hero .thesis{font-family:var(--display); font-weight:700; font-size:clamp(1.5rem,3.5vw,2.25rem);
+  line-height:1.22; margin:0; color:var(--heading); max-width:28ch; text-wrap:balance}
+.hero .thesis .w-true{color:var(--clay)}
+.hero .thesis .w-check{color:var(--accent)}
+.hero .sub{margin:1rem 0 0; color:var(--muted); max-width:58ch; font-size:1rem}
+.steps{display:grid; gap:.45rem; margin:1.3rem 0 0; max-width:620px}
+.step{display:grid; grid-template-columns:2rem minmax(0,1fr); gap:.7rem; align-items:baseline;
+  border:1px solid var(--line); border-radius:8px; padding:.5rem .75rem; background:var(--surface-2)}
+.step b{font-family:var(--mono); color:var(--accent); font-weight:500}
+.step span{font-size:.93rem}
+
+.quote{font-family:var(--display); font-weight:600; font-size:1.3rem; line-height:1.4;
+  color:var(--heading); border-left:3px solid var(--clay); padding:.15rem 0 .15rem 1.1rem;
+  margin:1.3rem 0; max-width:56ch}
+.frag{display:block; font-family:var(--body); font-size:.76rem; font-weight:600; color:var(--clay);
+  letter-spacing:.06em; text-transform:uppercase; margin-bottom:.4rem}
+
+.evidence{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1.1rem; margin:1.1rem 0}
+.ev{border-left:3px solid var(--line); padding:.2rem 0 .2rem .9rem; min-width:0}
+.ev .big{font-family:var(--display); font-weight:700; font-size:1.8rem; color:var(--heading);
+  line-height:1.15; font-variant-numeric:tabular-nums}
+.ev p{margin:.4rem 0; font-size:.9rem}
+.ev .src{font-size:.77rem; color:var(--muted)}
+.ev.warn{border-left-color:var(--clay)}
+.ev.warn .big{color:var(--clay)}
+.ev.good{border-left-color:var(--accent)}
+.ev.good .big{color:var(--accent)}
+
+.tablewrap{overflow-x:auto; margin:.8rem 0; border:1px solid var(--line); border-radius:10px}
+table{border-collapse:collapse; width:100%; font-size:.91rem; background:var(--surface)}
+th,td{padding:.55rem .75rem; border-bottom:1px solid var(--line); text-align:left; vertical-align:top}
+th{background:var(--surface-2); font-weight:600; font-size:.83rem; letter-spacing:.02em}
+tr:last-child td{border-bottom:0}
+td.num{font-family:var(--mono); white-space:nowrap; font-variant-numeric:tabular-nums}
+tr.hl td{background:var(--accent-soft)}
+
+.vote{display:grid; gap:.5rem; margin:.7rem 0}
+.vopt{display:grid; grid-template-columns:minmax(10rem,23rem) minmax(0,1fr) auto auto; gap:.7rem; align-items:center}
+.vopt .vl{font-size:.92rem}
+.vopt .track{display:block; height:1.25rem; background:var(--surface-2); border:1px solid var(--line);
+  border-radius:4px; overflow:hidden}
+.vopt .fill{display:block; height:100%; background:var(--accent); width:0; transition:width .25s}
+.vopt .cnt{font-family:var(--mono); font-size:.86rem; min-width:7ch; text-align:right;
+  font-variant-numeric:tabular-nums}
+.vopt .pm{display:flex; gap:3px}
+.vopt .pm button{width:1.6rem; height:1.6rem; border-radius:5px; border:1px solid var(--line);
+  background:var(--surface); cursor:pointer; padding:0}
+
+input[type=number],input[type=text],select.inp,textarea{width:100%; border:1px solid var(--line);
+  border-radius:7px; padding:.45rem .6rem; background:var(--surface-2)}
+textarea{min-height:6rem; font-family:var(--mono); font-size:.85rem; line-height:1.55}
+
+.sorgu{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); border:1px solid var(--line);
+  border-radius:10px; overflow:hidden; margin:1rem 0}
+.sorgu div{padding:.85rem .8rem; border-right:1px solid var(--line); background:var(--surface); min-width:0}
+.sorgu div:last-child{border-right:0}
+.sorgu .L{font-family:var(--display); font-weight:700; font-size:2rem; line-height:1; color:var(--accent)}
+.sorgu h4{margin:.3rem 0 .2rem; font-size:.95rem}
+.sorgu p{margin:0; font-size:.84rem; color:var(--muted)}
+
+.checklist{list-style:none; padding:0; margin:.5rem 0; max-width:72ch}
+.checklist li{display:flex; gap:.6rem; align-items:flex-start; padding:.4rem 0; border-bottom:1px solid var(--line)}
+.checklist li:last-child{border-bottom:0}
+.checklist input{margin-top:.38rem; accent-color:var(--accent); width:1.02rem; height:1.02rem; flex:0 0 auto}
+
+.card{border:1px solid var(--line); border-radius:10px; background:var(--surface); padding:1rem 1.1rem;
+  display:flex; flex-direction:column; gap:.45rem; min-width:0}
+.card h4{margin:0; font-family:var(--display); font-weight:600; font-size:1.05rem; color:var(--heading)}
+.card > .tag{align-self:flex-start}
+.card p{margin:.2rem 0; font-size:.89rem}
+.card details{font-size:.86rem; border-top:1px solid var(--line); padding-top:.45rem}
+.card summary{cursor:pointer; color:var(--accent); font-weight:600}
+
+.fig{margin:1.4rem 0; max-width:820px}
+.fig svg{display:block; width:100%; max-width:100%; height:auto; color:var(--ink)}
+.fig .frame{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:1rem .9rem}
+.fig figcaption{margin-top:.55rem; font-size:.85rem; color:var(--muted); max-width:66ch; line-height:1.5}
+.svg-box{fill:var(--surface-2); stroke:currentColor; stroke-opacity:.3}
+.svg-accent{fill:var(--accent)}
+.svg-accent-box{fill:var(--accent-soft); stroke:var(--accent); stroke-opacity:.55}
+.svg-clay{fill:var(--clay)}
+.svg-clay-box{fill:var(--clay-soft); stroke:var(--clay); stroke-opacity:.55}
+.svg-t{fill:currentColor; font-family:var(--body); font-size:13px}
+.svg-t.sm{font-size:11.5px; fill:var(--muted)}
+.svg-t.b{font-weight:600}
+.svg-t.mono{font-family:var(--mono); font-size:12px}
+.svg-t.on-mark{fill:var(--surface); font-weight:600}
+.svg-line{stroke:currentColor; stroke-opacity:.55; fill:none}
+.svg-line.dash{stroke-dasharray:5 4; stroke:var(--clay); stroke-opacity:.9}
+
+.plates{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:.9rem; margin:1.2rem 0}
+.plate{margin:0; display:grid; grid-template-columns:92px minmax(0,1fr); gap:.85rem; align-items:start;
+  border:1px solid var(--line); border-left:3px solid var(--clay); border-radius:10px;
+  background:var(--surface); padding:.85rem .95rem}
+.plate .mono-img{width:92px; height:112px; border-radius:6px; overflow:hidden;
+  background:var(--accent-soft); display:grid; place-items:center; border:1px solid var(--line)}
+.plate .mono-img img{width:100%; height:100%; object-fit:cover; display:block}
+.plate .mono-img .initial{font-family:var(--display); font-weight:700; font-size:2.4rem;
+  color:var(--accent); line-height:1}
+.plate h4{margin:0; font-family:var(--display); font-weight:700; font-size:1.05rem; color:var(--heading); line-height:1.2}
+.plate .years{margin:.1rem 0 .35rem; font-family:var(--mono); font-size:.78rem; color:var(--muted)}
+.plate .work{margin:0 0 .35rem; font-size:.8rem; color:var(--muted)}
+.plate .line{margin:0; font-size:.88rem; line-height:1.45}
+.plate .credit{margin:.45rem 0 0; font-size:.72rem; color:var(--muted); line-height:1.35}
+
+.reslist{display:grid; gap:.7rem; margin:1rem 0; max-width:76ch}
+.res{display:grid; grid-template-columns:auto minmax(0,1fr); gap:.8rem; align-items:start;
+  border:1px solid var(--line); border-radius:9px; background:var(--surface); padding:.7rem .85rem}
+.res .lang{font-size:.7rem; font-weight:700; letter-spacing:.06em; padding:.15rem .4rem; border-radius:4px;
+  background:var(--surface-2); border:1px solid var(--line); color:var(--muted); white-space:nowrap}
+.res .lang.tr{background:var(--accent-soft); color:var(--accent); border-color:transparent}
+.res .lang.en{background:var(--clay-soft); color:var(--clay); border-color:transparent}
+.res b{display:block; font-size:.95rem; line-height:1.35}
+.res .meta{font-size:.79rem; color:var(--muted); margin:.15rem 0 .25rem}
+.res p{margin:0; font-size:.86rem}
+
+.refs{max-width:82ch; font-size:.9rem}
+.refs h3{font-family:var(--display); font-weight:600; font-size:1.06rem; color:var(--heading); margin:1.6rem 0 .4rem}
+.refs ol{padding-left:1.4rem}
+.refs li{margin:.45rem 0; line-height:1.5}
+.refs .doi{font-family:var(--mono); font-size:.83rem; word-break:break-all}
+
+.news{display:grid; gap:.8rem; margin:1.1rem 0; max-width:80ch}
+.newsitem{border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:0 10px 10px 0;
+  background:var(--surface); padding:.8rem 1rem}
+.newsitem .when{font-family:var(--mono); font-size:.76rem; color:var(--muted); letter-spacing:.02em}
+.newsitem h4{margin:.15rem 0 .3rem; font-family:var(--display); font-weight:600; font-size:1.06rem; color:var(--heading)}
+.newsitem p{margin:.25rem 0; font-size:.92rem}
+.newsitem.clay{border-left-color:var(--clay)}
+
+@media (max-width: 1000px){
+  .grid4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sorgu{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sorgu div{border-bottom:1px solid var(--line)}
+  .evidence{grid-template-columns:1fr}
+}
+@media (max-width: 860px){
+  .app{grid-template-columns:1fr}
+  .rail{display:none}
+  .mobile-nav{display:block; position:sticky; top:calc(58px + env(safe-area-inset-top,0px)); z-index:40;
+    background:var(--surface-2); border-bottom:1px solid var(--line); padding:.5rem clamp(1rem,3vw,1.5rem)}
+  .grid2,.grid3{grid-template-columns:1fr}
+  .vopt{grid-template-columns:minmax(0,1fr) auto auto}
+  .vopt .track{grid-column:1 / -1; order:3}
+  .clock .seg{display:none}
+}
+@media (max-width: 540px){
+  .grid4,.sorgu{grid-template-columns:1fr}
+}
+</style>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="code"><span>UEC248</span> Yapay Zeka ile Diyalog</div>
+    <div class="sub">Prompt Mühendisliği ve Eleştirel Düşünme &middot; 2026–2027 Güz &middot; Hafta 3 &middot; C102</div>
+  </div>
+  <div class="clock">
+    <button class="tb-btn" id="clockBtn">Dersi başlat</button>
+    <span class="t" id="clockT">00:00</span>
+    <span class="seg" id="clockSeg">Plan: Açılış</span>
+  </div>
+  <div class="tools">
+    <button class="tb-btn" id="fontDown" aria-label="Yazıyı küçült">A&minus;</button>
+    <button class="tb-btn" id="fontUp" aria-label="Yazıyı büyüt">A+</button>
+    <button class="tb-btn" id="modeBtn" aria-pressed="false">Eğitmen notları</button>
+  </div>
+</header>
+
+<div class="mobile-nav">
+  <label class="small muted" for="mnav">Bölüm</label>
+  <select id="mnav" class="inp"></select>
+</div>
+
+<div class="app">
+  <nav class="rail" aria-label="Ders akışı">
+    <h2>100 dakikalık akış</h2>
+    <ol id="railList"></ol>
+    <div class="meta">
+      <p><b>Dr. Öğr. Üyesi Ersin Gündeğer</b></p>
+      <p>Eczacılık Fakültesi, Biyokimya ABD</p>
+      <p class="small">ersin.gundeger@istun.edu.tr</p>
+      <p>Ofis: A002</p>
+      <p class="small">Klavye: &larr; &rarr; bölüm değiştirir</p>
+    </div>
+  </nav>
+
+<main id="main">
+
+<!-- ================= 0. HAZIRLIK ================= -->
+<section class="section egitmen" id="hazirlik" data-title="Ders öncesi hazırlık" data-time="Dersten önce" data-short="Hazırlık">
+  <div class="sec-head">
+    <span class="sec-time">Dersten 15 dakika önce</span>
+    <h1>Laboratuvara girmeden önce</h1>
+    <p class="lead">Bu bölüm yalnızca eğitmen modunda görünür. Sayfayı öğrencilerle paylaştığınızda konuşma metni ve notlar gizli açılır.</p>
+  </div>
+
+  <h2 class="h">Dersin tek cümlesi</h2>
+  <p class="prose">Hafta 2'de tekniklerin cevabı <b>denetlenebilir</b> yaptığını gördük. Bu hafta bir basamak aşağı iniyoruz: denetlemek için önce <b>ne söylediğimizde anlaştığımızı</b> bilmemiz gerekiyor. Günün tezi: <b>bir kuralı sonlu sayıda örnek belirlemez; anlam, belirtimde değil kullanımda kararlaşır.</b> Tahtaya Hafta 2'nin iki kolonunu silmeyin, yanlarına üçüncü bir kelime yazın: <b>anlaşma</b>.</p>
+
+  <h2 class="h">Hafta 2'den devralınanlar</h2>
+  <ul class="clean">
+    <li>Kapanışta açık bırakılan soru: <b>bir kuralı kaç örnek belirler?</b> Bugünün ilk cümlesi bu.</li>
+    <li>Lab 2'de biçim–içerik ayrışması çıktıysa bugün ona bir açıklama veriyoruz: biçim bir uzlaşım meselesi, içerik bir dünya meselesi.</li>
+    <li>Ödev 1 bugün teslim ediliyor (PDF). Teslim listesini derse başlamadan kontrol edin.</li>
+  </ul>
+
+  <h2 class="h">Kontrol listesi</h2>
+  <ul class="checklist">
+    <li><input type="checkbox" id="p1"><label for="p1">Projeksiyon açık, bu sayfa tam ekran, yazı arka sıradan okunuyor (A+ ile büyütün).</label></li>
+    <li><input type="checkbox" id="p2"><label for="p2">Laboratuvar makinelerinde tarayıcı ve internet çalışıyor; öğrenciler kendi yapay zekâ araçlarına girebiliyor. Giremeyen yanındakiyle ikili çalışır.</label></li>
+    <li><input type="checkbox" id="p3"><label for="p3">Roller bir kişi kayıyor: Soran &rarr; Test yazarı &rarr; Kayıtçı &rarr; Şüpheci.</label></li>
+    <li><input type="checkbox" id="p4"><label for="p4">Lab 1 için tahtaya iki sütun çizilecek yer var (sınıfın ürettiği kurallar oraya yazılacak).</label></li>
+    <li><input type="checkbox" id="p5"><label for="p5">Ödev 1 teslimleri alındı; Ödev 2 bugün veriliyor, teslim Hafta 5 dersinden önce.</label></li>
+    <li><input type="checkbox" id="p6"><label for="p6">Çıkış bileti kâğıtları hazır.</label></li>
+  </ul>
+
+  <h2 class="h">Zaman planı</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Dakika</th><th>Bölüm</th><th>Biçim</th><th>Çıktı</th></tr></thead>
+    <tbody>
+      <tr><td class="num">0–5</td><td>2-4-6: kuralı bulun</td><td>Canlı deney</td><td>Kuralın örneklerce belirlenmemesi</td></tr>
+      <tr><td class="num">5–12</td><td>Augustinus'un dil tablosu</td><td>Anlatım</td><td>Terim tablosu</td></tr>
+      <tr><td class="num">12–20</td><td>Kural izleme paradoksu (§201)</td><td>Anlatım</td><td>Belirtim ≠ davranış</td></tr>
+      <tr><td class="num">20–34</td><td><b>Lab 1: Kuralı kaç örnek belirler?</b></td><td>Bireysel + sınıf sayımı</td><td>Kural çeşitliliği tablosu</td></tr>
+      <tr class="hl"><td class="num">34–44</td><td>Ara</td><td></td><td></td></tr>
+      <tr><td class="num">44–52</td><td>Anlam kullanımdadır; dağılımsal anlam</td><td>Anlatım</td><td>Modelin anlamı nereden aldığı</td></tr>
+      <tr><td class="num">52–60</td><td>Aile benzerliği ve temellendirme açığı</td><td>Anlatım + sayılar</td><td>r = 0,37</td></tr>
+      <tr><td class="num">60–74</td><td><b>Lab 2: Yerel tanım testi</b></td><td>Takım deneyi</td><td>Uyma / geri dönme sayımı</td></tr>
+      <tr><td class="num">74–84</td><td>Özel dil, kutudaki böcek, iç rapor</td><td>Anlatım + mini deney</td><td>Dış ölçüt fikri</td></tr>
+      <tr><td class="num">84–90</td><td>Bizim kelimemiz olmayan ayrımlar</td><td>Anlatım</td><td>Xeno-temsil; «Türkçe düşünen model»</td></tr>
+      <tr><td class="num">90–100</td><td>Kapanış</td><td>Anlatım + duyuru</td><td>Üç fikir, Ödev 2, çıkış bileti</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note">
+    <p><b>Zaman taşarsa sırayla kısın:</b> Bölüm 10'un xeno-temsil kısmı (3 dk) &rarr; Bölüm 7'nin ahtapot deneyi (2 dk) &rarr; Bölüm 2'nin terim tablosu (2 dk). <b>Kısmayın:</b> Lab 1 ve Lab 2; dersin iddiası o iki deneyde kanıtlanıyor.</p>
+    <p><b>Kod yazdırmıyoruz.</b> Her iki laboratuvar da tarayıcıda sohbet arayüzüyle yapılıyor; doğrulama gözle yapılan bir karşılaştırma. Hata ayıklama ihtiyacı doğmuyor.</p>
+    <p><b>Felsefe dozu:</b> Bu hafta felsefe ağırlığı yüksek. Dozu dengelemek için her felsefi kavramdan hemen sonra yazılım karşılığını verin: §201 &rarr; belirtim ile davranış farkı; aile benzerliği &rarr; tip hiyerarşisi ile ördek tiplemesi; özel dil &rarr; dışarıdan gözlenebilir ölçüt olmadan test yazılamaması.</p>
+  </div>
+</section>
+
+<!-- ================= 1. AÇILIŞ ================= -->
+<section class="section" id="acilis" data-title="2-4-6: kuralı bulun" data-time="0–5" data-short="Açılış">
+  <div class="hero">
+    <p class="kicker">Hafta 3 &middot; Günün sorusu</p>
+    <p class="thesis">Bir kuralı kaç örnek <span class="w-check">belirler</span>? Ve bir kelimenin anlamını kim <span class="w-true">belirler</span>?</p>
+    <p class="sub">Geçen hafta prompt'u bir yöntem sorusu olarak ele aldık. Bugün bir basamak aşağı iniyoruz: yazdığımız cümlenin ne anlama geldiğini nereden biliyoruz, ve karşımızdakinin aynı şeyi anladığını nasıl denetleriz?</p>
+    <div class="steps">
+      <div class="step"><b>I</b><span>Kural: örnekler kuralı belirlemez (0–34)</span></div>
+      <div class="step"><b>II</b><span>Anlam: kullanım, aile benzerliği, temellendirme (44–60)</span></div>
+      <div class="step"><b>III</b><span>Yerel tanım testi, özel dil, bizim kelimemiz olmayan ayrımlar (60–100)</span></div>
+    </div>
+  </div>
+
+  <div class="sec-head">
+    <span class="sec-time">0–5. dakika</span>
+    <h1>2-4-6: kuralı bulun</h1>
+    <p class="lead">Önce bir oyun. Kâğıt kalem yok, yalnızca el kaldırma.</p>
+  </div>
+
+  <div class="bench live">
+    <h3>Oyun</h3>
+    <p class="hint">Aklımda üç sayılık dizileri üreten bir kural var. Şu üçlü kurala <b>uyuyor</b>: <b>2, 4, 6</b>. Bana başka bir üçlü söyleyin, ben yalnızca «uyuyor» ya da «uymuyor» diyeceğim. Kuralı bulduğunuzu düşündüğünüzde söyleyin.</p>
+    <div class="vote" id="voteOpen" data-opts="Sınıfın ilk önerisi: artan çift sayılar|Sınıfın ilk önerisi: her seferinde +2|Sınıfın ilk önerisi: başka bir kural|Kuralı bulan takım sayısı"></div>
+    <div class="row egitmen" style="margin-top:.6rem"><button class="btn small" data-resetcount="voteOpen">Sıfırla</button></div>
+    <p class="small muted egitmen"><b>Kural: herhangi üç artan sayı.</b> 1-2-3 uyar, 5-500-9000 uyar, 6-4-2 uymaz.</p>
+  </div>
+
+  <div class="say">
+    <p>Bu oyunun klasik sonucu şudur: sınıf neredeyse her zaman kuralı doğrulayan üçlüler önerir. 8-10-12. Uyuyor. 20-22-24. Uyuyor. 100-102-104. Uyuyor. Üç «uyuyor» alınca insan kuralı bildiğini düşünür.</p>
+    <p>Oysa kural çok daha geniş: herhangi üç artan sayı. Siz kuralı bulamadınız, çünkü kuralı <i>çürütecek</i> bir örnek denemediniz. 1-2-3 deseydiniz hâlâ uyardı ama bir şey öğrenirdiniz. 3-7-9 deseydiniz çok daha fazlasını öğrenirdiniz.</p>
+    <p>Geçen haftaların Popper bölümünü hatırlayın: doğrulama ucuz, çürütme pahalı. Ama bugün bu oyunu Popper için oynamadık. Başka bir şey için oynadık.</p>
+    <p>Dikkat edin: ben size üç sayı verdim ve siz bir kural çıkardınız. Verdiğim üç sayı birçok farklı kuralla uyumluydu. «Artan çift sayılar», «her seferinde iki ekle», «ikinci sayı ilk ikisinin ortalaması», «herhangi üç artan sayı» — hepsi 2, 4, 6'yı üretir. <b>Örnekler kuralı belirlemedi.</b> Kuralı belirleyen şey sizin örneklere getirdiğiniz okumaydı.</p>
+    <p>Geçen hafta örnekle öğretmeyi, yani few-shot'ı konuştuk ve sonunda şu soruyu bırakmıştım: bir kuralı kaç örnek belirler? Bugünkü cevabım şu: <b>hiçbir sonlu örnek dizisi bir kuralı tek anlamda belirlemez.</b> Bu bir prompt mühendisliği sorunu değil; yüz yıllık bir dil felsefesi sorunu. Bugün onu çalışacağız, çünkü modele her örnek verdiğinizde bu sorunun içindesiniz.</p>
+  </div>
+
+  <div class="note">
+    <p>Oyun 4 dakikayı geçmesin. Üç dört öneri alın, hepsine «uyuyor» deyin, biri kuralı söylediğinde «bu kurala uyan bir örnek söyleyin, ama <i>uymayacağını düşündüğünüz</i> bir örnek de söyleyin» diye bastırın. Kuralı erken bulan bir öğrenci olursa teslim edin ve nasıl bulduğunu sınıfa anlattırın: neredeyse her zaman «uymayacağını sandığım bir şey denedim» der.</p>
+    <p>Bu, Peter Wason'ın 1960 tarihli klasik deneyidir; kaynakçada künyesi var. Adını baştan vermeyin, sonunda verin.</p>
+  </div>
+</section>
+
+<!-- ================= 2. AUGUSTINUS ================= -->
+<section class="section" id="augustinus" data-title="Kelime bir etiket midir?" data-time="5–12" data-short="Etiket mi?">
+  <div class="sec-head">
+    <span class="sec-time">5–12. dakika</span>
+    <h1>Kelime bir etiket midir?</h1>
+    <p class="lead">Wittgenstein'ın <i>Felsefi Soruşturmalar</i>'ı bir dil öğrenme sahnesiyle açılır ve o sahneyi eleştirir.</p>
+  </div>
+
+  <div class="plates">
+    <figure class="plate">
+      <span class="mono-img"><img src="img/wittgenstein.jpg" alt="Ludwig Wittgenstein" hidden><span class="initial">W</span></span>
+      <figcaption>
+        <h4>Ludwig Wittgenstein</h4>
+        <p class="years">1889 – 1951</p>
+        <p class="work">Tractatus Logico-Philosophicus, 1921 · Philosophische Untersuchungen, 1953</p>
+        <p class="line">Önce dilin dünyanın resmi olduğunu savundu, sonra bu görüşün kendisini en sert biçimde eleştirdi.</p>
+      </figcaption>
+    </figure>
+    <figure class="plate">
+      <span class="mono-img"><img src="img/augustinus.jpg" alt="Aurelius Augustinus" hidden><span class="initial">A</span></span>
+      <figcaption>
+        <h4>Aurelius Augustinus</h4>
+        <p class="years">354 – 430</p>
+        <p class="work">Confessiones I, 8</p>
+        <p class="line">Dili, büyükler bir nesneyi gösterip adını söyledikçe öğrendiğini anlatır. Wittgenstein kitabını bu pasajla açar.</p>
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="say">
+    <p>Wittgenstein <i>Felsefi Soruşturmalar</i>'a Augustinus'tan bir alıntıyla başlar. Augustinus çocukluğunu anlatır: büyükler bir nesneyi gösterir, adını söyler, o da zamanla hangi sesin hangi şeyi gösterdiğini anlar. Dil böyle öğrenilir.</p>
+    <p>Wittgenstein bu tabloyu reddetmez, <b>dar bulur</b>. Der ki: bu, dilin nasıl işlediğine dair ilkel bir resim. İşaret ederek öğretilebilecek kelimeler var, doğru; «masa», «kırmızı». Peki «ama»? «Belki»? «Beş»? «Merhaba»? Hangi nesneyi gösterirsiniz?</p>
+    <p>İtirazı şuraya bağlar: her kelimeyi bir etiket, her cümleyi etiketler dizisi sayarsanız, dilin yaptığı işlerin çoğunu göremezsiniz. Emir vermek, şaka yapmak, selamlaşmak, söz vermek, sormak, teşekkür etmek. Bunların hiçbiri «isimlendirme» değil.</p>
+    <p>Şimdi bunu kendi işinize taşıyın. Bir fonksiyona <code>hesapla</code> adını verdiğinizde ne yapmış oluyorsunuz? Augustinus'un tablosuna göre: bir nesneye etiket yapıştırdınız. Gerçekte: bir sözleşme imzaladınız. Ekipten biri o fonksiyonu çağırdığında ne bekleyeceğini, ne döneceğini, hangi durumda patlayacağını varsayar. Ad, bu beklentilerin kısaltmasıdır. Geçen hafta açılışta gördüğümüz <code>topla</code> fonksiyonunu hatırlayın: adı «topla» idi ama ortalama döndürüyordu. Orada bozulan şey bir etiket değil, bir anlaşmaydı.</p>
+    <p>Bugünün bütün bölümleri bu ayrımın üzerinde duruyor: <b>etiket mi, anlaşma mı?</b></p>
+  </div>
+
+  <h2 class="h">Bugünün terimleri</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Türkçe</th><th>İngilizce</th><th>Ne demek</th></tr></thead>
+    <tbody>
+      <tr><td>dil oyunu</td><td>language game</td><td>Bir dil kullanımının, içine gömülü olduğu etkinlikle birlikte ele alınması. Kelimeler anlamını o etkinlik içinde kazanır.</td></tr>
+      <tr><td>anlamın kullanımda olması</td><td>meaning as use</td><td>Bir kelimenin anlamının, karşılık geldiği nesne değil, dildeki kullanımı olması.</td></tr>
+      <tr><td>aile benzerliği</td><td>family resemblance</td><td>Bir kavrama giren örneklerin ortak tek bir öz yerine, örtüşen benzerlikler ağıyla bağlı olması.</td></tr>
+      <tr><td>kural izleme</td><td>rule-following</td><td>Bir kuralı «anlamanın», onu somut durumlarda uygulayabilmekte görünmesi; kuralın kendisinin uygulamayı belirlememesi.</td></tr>
+      <tr><td>özel dil argümanı</td><td>private language argument</td><td>Yalnızca tek kişinin erişebildiği bir şeyi adlandıran bir dilin, doğruluk ölçütü olmadığı için dil sayılamayacağı savı.</td></tr>
+      <tr><td>dağılımsal anlam</td><td>distributional semantics</td><td>Bir kelimenin anlamını, birlikte geçtiği kelimelerin istatistiğiyle temsil etme yaklaşımı. Gömmelerin arkasındaki fikir.</td></tr>
+      <tr><td>temellendirme</td><td>grounding</td><td>Bir simgenin dünyadaki bir şeye bağlanması. Metinden metne giden bir sistemde bu bağın nereden geldiği tartışmalıdır.</td></tr>
+      <tr><td>belirtim</td><td>specification</td><td>Bir davranışın yazıyla tarif edilmesi. Bugünün sorusu: belirtim davranışı ne kadar belirler?</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note">
+    <p>Tabloyu okumayın, iki satırı işaret edip geçin: «anlamın kullanımda olması» ve «belirtim». İkisi de bugün üç kez geri gelecek.</p>
+    <p>Augustinus pasajını uzatmayın. Amaç Augustinus değil, <i>Soruşturmalar</i>'ın yöntemini göstermek: Wittgenstein teori kurmaz, elimizdeki resmi gevşetir.</p>
+  </div>
+</section>
+
+<!-- ================= 3. KURAL İZLEME ================= -->
+<section class="section" id="kural" data-title="Kural izleme paradoksu" data-time="12–20" data-short="§201 Kural">
+  <div class="sec-head">
+    <span class="sec-time">12–20. dakika</span>
+    <h1>Kural izleme paradoksu</h1>
+    <p class="lead">Wittgenstein'ın en çok tartışılan paragrafı, bir matematik dersi sahnesiyle başlar.</p>
+  </div>
+
+  <div class="prose">
+    <p>Sahne şu: öğrenciye «ikişer ikişer say» diye öğretiyorsunuz. 0, 2, 4, 6… Bin kere doğru yapıyor. Sonra 1000'e gelince 1004, 1008 diye devam ediyor. «Yanlış yaptın» diyorsunuz. Öğrenci şaşırıyor: «Ama ben de aynı şeyi yapıyorum, bana öğrettiğiniz gibi.»</p>
+    <p>Onun izlediği kural şu olabilir: <span class="term">bine kadar ikişer, binden sonra dörder ekle.</span> Verdiğiniz bütün örnekler bu kuralla da uyumluydu. Bin örnek yetmedi.</p>
+  </div>
+
+  <div class="quote"><span class="frag">Felsefi Soruşturmalar, §201 (özetle)</span>Hiçbir eylem biçimi bir kural tarafından belirlenemez, çünkü her eylem biçimi kurala uygun hâle getirilebilir.</div>
+
+  <figure class="fig">
+    <div class="frame">
+      <svg viewBox="0 0 760 290" role="img" aria-label="Aynı dört örnek iki farklı kuralla uyumludur ve beşinci terimde ayrışırlar.">
+        <defs>
+          <marker id="arwA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,1 L9,5 L0,9 z" fill="currentColor" fill-opacity=".55"></path>
+          </marker>
+        </defs>
+        <text x="16" y="28" class="svg-t b">Verilen örnekler</text>
+        <rect x="16" y="40" width="210" height="72" rx="10" class="svg-box"></rect>
+        <text x="32" y="72" class="svg-t mono">2 &middot; 4 &middot; 6 &middot; 8</text>
+        <text x="32" y="94" class="svg-t sm">dört örnek, hiçbiri yanlış değil</text>
+
+        <path d="M232,62 L300,62" class="svg-line" marker-end="url(#arwA)"></path>
+        <path d="M232,96 L300,170" class="svg-line" marker-end="url(#arwA)"></path>
+
+        <rect x="306" y="36" width="230" height="64" rx="10" class="svg-accent-box"></rect>
+        <text x="322" y="60" class="svg-t b">Kural A</text>
+        <text x="322" y="82" class="svg-t sm">her adımda 2 ekle</text>
+
+        <rect x="306" y="146" width="230" height="64" rx="10" class="svg-clay-box"></rect>
+        <text x="322" y="170" class="svg-t b">Kural B</text>
+        <text x="322" y="192" class="svg-t sm">10'a kadar 2 ekle, sonra 4 ekle</text>
+
+        <path d="M542,68 L600,68" class="svg-line" marker-end="url(#arwA)"></path>
+        <path d="M542,178 L600,178" class="svg-line" marker-end="url(#arwA)"></path>
+
+        <rect x="606" y="44" width="138" height="48" rx="8" class="svg-box"></rect>
+        <text x="675" y="74" class="svg-t mono b" text-anchor="middle">… 10, 12</text>
+        <rect x="606" y="154" width="138" height="48" rx="8" class="svg-box"></rect>
+        <text x="675" y="184" class="svg-t mono b" text-anchor="middle">… 10, 14</text>
+
+        <text x="380" y="252" class="svg-t sm" text-anchor="middle">Örnekler ayrışmıyor; ayrışma yalnızca</text>
+        <text x="380" y="270" class="svg-t sm" text-anchor="middle">henüz görülmemiş durumda ortaya çıkıyor.</text>
+        <path d="M516,238 L598,212" class="svg-line dash"></path>
+      </svg>
+    </div>
+    <figcaption>Kural belirlenimsizliği. Dört örnek iki kuralla da tutarlı; fark ancak örneklerin dışına çıkıldığında görünür. Few-shot prompt yazarken yaptığınız şey tam olarak budur: modele birkaç örnek verip, geri kalan sonsuz durumda sizin kastettiğiniz kuralı seçmesini beklersiniz.</figcaption>
+  </figure>
+
+  <div class="say">
+    <p>Wittgenstein paradoksu şöyle kurar: hiçbir eylem biçimi bir kural tarafından belirlenemez, çünkü her eylem biçimini kurala uygun gösterecek bir yorum bulunabilir. Bin örnek verdiniz; bin birinciyi benim beklediğim gibi yapacağınızı garanti eden hiçbir şey yok.</p>
+    <p>Ama Wittgenstein burada durmaz, çünkü bu hâliyle sonuç saçma: insanlar fiilen anlaşıyor. Çözümü şu: kuralı anlamak, zihnimizde bir yorum taşımak değildir. Kuralı anlamak <b>bir pratiğe katılmaktır</b>. «Kurala uymak» ve «kuraldan sapmak» dediğimiz şeyler, tek tek durumlarda gösterdiğimiz davranışlardır. Kural, uygulamanın öncesinde değil, içinde durur.</p>
+    <p>Bu, bir yazılım ekibinde her gün yaşadığınız şeydir. Bir arayüz belirtimi yazarsınız. Üç sayfadır, her şey açık görünür. Sonra birisi onu uygular ve çıkan şey sizin kastettiğiniz şey değildir. Tartışırsınız. İkiniz de haklısınızdır: belirtim ikinizi de destekliyordur. Anlaşmazlık belirtimin eksikliğinden değil, belirtimlerin <b>yapısal olarak</b> eksik kalmasından çıkar. Bu yüzden ekipler sözleşme testleri yazar; test, metnin kapatmadığı boşluğu bir örnekle kapatır. Ve bu yüzden testler de yetmez: testler de sonlu bir örnek kümesidir.</p>
+    <p>Şimdi aynı şeyi modele yapıyorsunuz. Prompt bir belirtimdir. İki örnek verirsiniz, model üçüncüyü üretir. Üçüncü, sizin istediğiniz olmayabilir; bu modelin «aptallığı» değil, kuralın örneklerce belirlenmemiş olmasıdır. İnsan meslektaşınız bu boşluğu <b>ortak pratikle</b> doldurur: ekibinizin alışkanlıklarını bilir, hangi durumda size soracağını bilir. Modelin doldurduğu şey ise eğitim verisindeki istatistiksel ortalamadır.</p>
+    <p>Şimdi bunu ölçelim. Laboratuvara geçiyoruz.</p>
+  </div>
+
+  <div class="note">
+    <p>Burada «Kripke'nin quus örneği» sorulabilir. Bilen bir öğrenci varsa teslim edin: Kripke'nin 1982 tarihli okuması bu paragrafı bir kuşkuculuk argümanına çevirir ve literatürün önemli bir kısmı buna itiraz eder. Derste tarafsız kalın; «bu okuma tartışmalı, biz Wittgenstein'ın kendi metnindeki pratik vurgusuyla ilerliyoruz» deyin.</p>
+    <p>Bu bölümün bir cümlelik özeti tahtaya yazılabilir: <b>belirtim davranışı belirlemez; pratik belirler.</b></p>
+  </div>
+</section>
+
+<!-- ================= 4. LAB 1 ================= -->
+<section class="section" id="lab1" data-title="Lab 1: Kuralı kaç örnek belirler?" data-time="20–34" data-short="Lab 1">
+  <div class="sec-head">
+    <span class="sec-time">20–34. dakika</span>
+    <h1>Lab 1: Kuralı kaç örnek belirler?</h1>
+    <p class="lead">Herkes aynı örnekleri verecek. Sınıfta kaç farklı kural çıkacağını sayacağız.</p>
+  </div>
+
+  <div class="bench lab">
+    <h3>Kurulum</h3>
+    <p class="hint">Herkes kendi makinesinde, <b>yeni bir sohbette</b>. Aşağıdaki prompt'u olduğu gibi kopyalayın. Hiçbir şey eklemeyin; eklerseniz deney bozulur, çünkü ölçtüğümüz şey tam olarak «eklenmeyen kısmın nasıl doldurulduğu».</p>
+    <div class="codebox"><button class="copy" type="button">Kopyala</button><span class="cap">Tur 1 — çıplak örnekler</span><pre>Aşağıda bir adlandırma kuralının dört örneği var.
+
+  kullanici_adi      -> kullanici-adi
+  toplamTutar        -> toplam-tutar
+  SiparisNo          -> siparis-no
+  ePostaAdresi       -> e-posta-adresi
+
+Aynı kuralı uygula ve yalnızca sonucu yaz:
+
+  HTTPYanitKodu      ->
+  musteri2Adres      ->
+  _gecici_deger      ->
+  ÜrünFiyatı         -></pre></div>
+    <p class="small muted">Dört örnek tek bir kuralı belirlemiyor. Son dört girdi bilerek seçildi: her biri örneklerin susduğu bir noktaya basıyor — ardışık büyük harfler, harf–rakam sınırı, baştaki alt çizgi, Türkçe karakter.</p>
+    <div class="timer" data-sec="300" data-label="Tur 1"></div>
+  </div>
+
+  <div class="bench lab">
+    <h3>Tur 2 — aynı sohbette sorun</h3>
+    <p class="hint">Cevap geldikten sonra, aynı sohbette şunu sorun:</p>
+    <div class="codebox"><button class="copy" type="button">Kopyala</button><pre>Uyguladığın kuralı tek cümlede yaz. Sonra şunu söyle: verdiğim dört örnek, senin yazdığın kuraldan başka hangi kurallarla da uyumluydu? En az iki alternatif kural yaz ve her biri için yukarıdaki dört çıktının nasıl değişeceğini göster.</pre></div>
+    <div class="timer" data-sec="240" data-label="Tur 2"></div>
+  </div>
+
+  <div class="bench live">
+    <h3>Sınıf sayımı</h3>
+    <p class="hint">Kayıtçılar bildirir, eğitmen girer. Dört zor girdinin her birinde sınıfta kaç <b>farklı</b> çıktı oluştuğuna bakıyoruz.</p>
+    <div class="vote" id="lab1tally" data-opts="HTTPYanitKodu — &laquo;h-t-t-p-yanit-kodu&raquo; tipi|HTTPYanitKodu — &laquo;http-yanit-kodu&raquo; tipi|musteri2Adres — rakamdan önce tire var|musteri2Adres — rakamdan önce tire yok|_gecici_deger — baştaki alt çizgi korundu|_gecici_deger — baştaki alt çizgi silindi|ÜrünFiyatı — Türkçe karakter korundu|ÜrünFiyatı — ASCII'ye çevrildi|Model &laquo;belirsiz, hangisini istersin&raquo; diye sordu"></div>
+    <div class="row egitmen" style="margin-top:.6rem"><button class="btn small" data-resetcount="lab1tally">Sıfırla</button></div>
+    <div class="timer" data-sec="240" data-label="Sayım ve tartışma"></div>
+  </div>
+
+  <div class="say">
+    <p>Sayılara bakalım. Dört örnek verdik ve sınıfta tek bir çıktı yok. Aynı örnekler, aynı talimat, farklı sonuçlar. Üstelik bunların hiçbiri «hata» değil; her biri verdiğim dört örnekle tutarlı.</p>
+    <p>Buradan iki pratik sonuç çıkıyor. Birincisi: örneklerinizi seçerken <b>tipik olanı değil, ayrıştıranı</b> seçin. Dört kolay örnek yerine, ikisi kolay ikisi sınırda olan bir küme, kuralınızı çok daha fazla daraltır. Geçen hafta «sınırı gösterin» demiştik; bugün nedenini biliyorsunuz.</p>
+    <p>İkincisi, ve bu daha önemli: <b>belirsizliği kapatmak sizin işiniz.</b> Modelin soruyu sorması beklenemez, çünkü en olası devam genellikle soru sormak değil, doldurmaktır. Kaçınızda model «bu girdilerde kural belirsiz, hangisini istersin» diye sordu? <i>(Sayıyı okuyun.)</i> Bu sayı her zaman düşüktür; 2026'da bu açığı kapatmaya çalışan ölçüt kümeleri yayımlanıyor, kaynakçada birkaçı var.</p>
+    <p>Tur 2'de modelden alternatif kurallar üretmesini istedik. Bu, prompt yazarken kullanabileceğiniz somut bir alışkanlık: <b>örneklerinizi verin ve modele «bu örnekler başka hangi kuralla uyumlu?» diye sorun.</b> Size kendi belirtiminizdeki boşlukları listeler. Bu bir doğruluk kazancı değil — tahtadaki ikinci kolona gider — ama belirsizliği <i>görünür</i> kılar.</p>
+  </div>
+
+  <div class="note">
+    <p><b>Sınıf tek tip çıktı verdiyse</b> bu da bir ölçümdür ve iyi bir tartışma açar: «Demek ki bu kuralda bir uzlaşım var. Uzlaşım nereden geliyor? Eğitim verisinden, yani insanların bu işi yapma alışkanlığından. Yani boşluğu dolduran şey kural değil, pratik.» Wittgenstein'ın tezinin tam kanıtı budur; bölümü bu cümleyle bağlayın.</p>
+    <p><b>Süre yetmezse</b> Tur 2'yi iki takıma yaptırıp sesli okutun, herkese yaptırmayın.</p>
+    <p>Dört girdinin neden seçildiğini sınıfa <i>sonradan</i> söyleyin; baştan söylerseniz öğrenciler prompt'a müdahale eder.</p>
+  </div>
+</section>
+
+<!-- ================= 5. ARA ================= -->
+<section class="section" id="ara" data-title="Ara" data-time="34–44" data-short="Ara">
+  <div class="sec-head">
+    <span class="sec-time">34–44. dakika</span>
+    <h1>Ara</h1>
+    <p class="lead">10 dakika.</p>
+  </div>
+  <div class="timer" data-sec="600" data-label="Ara"></div>
+  <div class="quote">Ekibinizin kod inceleme kurallarını üç maddeyle yazabilir misiniz? Yazdığınız üç madde, yeni gelen birinin sizin gibi inceleme yapmasını sağlar mı?</div>
+  <div class="note">
+    <p>Bu soruyu arada ekranda bırakın. Dönüşte bir iki cevap alıp ikinci yarıyı açın. Beklenen cevap: «hayır, yanına birkaç ay oturması gerekir» — ki bu, ikinci yarının tezidir: anlam kuralda değil, pratikte.</p>
+  </div>
+</section>
+
+<!-- ================= 6. ANLAM KULLANIMDADIR ================= -->
+<section class="section" id="kullanim" data-title="Anlam kullanımdadır" data-time="44–52" data-short="Anlam = kullanım">
+  <div class="sec-head">
+    <span class="sec-time">44–52. dakika</span>
+    <h1>Anlam kullanımdadır</h1>
+    <p class="lead">Wittgenstein'ın tezi ile dil modellerinin çalışma ilkesi şaşırtıcı biçimde aynı yöne bakıyor. Sonra ayrışıyorlar.</p>
+  </div>
+
+  <div class="quote"><span class="frag">Felsefi Soruşturmalar, §43</span>Bir sözcüğün anlamı, onun dildeki kullanımıdır.</div>
+
+  <div class="say">
+    <p>Paragrafın tamamını okumak önemli, çünkü Wittgenstein cümleyi bir kayıtla kurar: «kullanım» açıklaması, «anlam» kelimesinin <i>geniş bir kullanım sınıfı için</i> geçerlidir, hepsi için değil. Yani bu bir tanım değil, bir yöntem önerisi: bir kelimenin anlamını merak ediyorsan, karşılık geldiği şeyi arama; nasıl kullanıldığına bak.</p>
+    <p>Buna bağlı ikinci kavram dil oyunu. Wittgenstein uzun bir liste verir: emir vermek, bir nesneyi ölçüp betimlemek, bir olayı raporlamak, hikâye uydurmak, şaka yapmak, çeviri yapmak, teşekkür etmek, dua etmek. Hepsi dil, ama hepsi farklı oyun, farklı kurallar. «Su!» kelimesi bir restoranda sipariş, bir yangında uyarı, bir kimya dersinde örnektir. Aynı ses, üç farklı iş.</p>
+    <p>Şimdi tuhaf kısım. Dil modellerinin arkasındaki fikir, dilbilimde buna çok benzeyen bir yerden gelir. 1950'lerde Zellig Harris ve John Rupert Firth şunu savundu: bir kelimenin anlamını, birlikte geçtiği kelimelere bakarak karakterize edebilirsiniz. Firth'ün cümlesi meşhurdur: <i>«You shall know a word by the company it keeps.»</i> Bir kelimeyi, arkadaşlarından tanırsınız.</p>
+    <p>Gömme vektörleri tam olarak bunun uygulamasıdır. «Doktor» ile «hekim» birbirine yakın çıkar, çünkü aynı komşularla geçerler. Modelin anlama dair bildiği her şeyin kaynağı bu: metinde hangi şeyin hangi şeyle yan yana geldiği.</p>
+    <p>Buradan iki farklı sonuç çıkarılabilir ve bu, bugün cevabını vermeyeceğim ama tarafları net koyacağım bir tartışmadır.</p>
+    <p><b>İyimser okuma:</b> Wittgenstein haklıysa ve anlam kullanımdaysa, kullanımın istatistiğini öğrenen bir sistem anlamın önemli bir kısmını öğrenmiş olur. Model «adalet»in ne demek olduğunu, insanların bu kelimeyle ne yaptığına bakarak kavrar.</p>
+    <p><b>Karamsar okuma:</b> Wittgenstein'ın «kullanım» dediği şey metindeki komşuluk değil. Onun kullanımı, insanların bir şeyler yaparken dile başvurmasıdır: taş uzatmak, hastayı muayene etmek, kod gözden geçirmek. Buna <b>yaşam biçimi</b> der. Metin, bu etkinliğin kaydıdır; etkinliğin kendisi değil. Modelin gördüğü şey oyunun kaydı, oyunun kendisi değil.</p>
+    <p>Dikkat edin, bu ikisi arasında seçim yapmak için bir ölçüte ihtiyacımız var. Ve son bir yılda tam bunu ölçmeye çalışan çalışmalar yayımlandı. Sıradaki bölüm onlar.</p>
+  </div>
+
+  <figure class="fig">
+    <div class="frame">
+      <svg viewBox="0 0 760 300" role="img" aria-label="Anlamın iki kaynağı: metin içi komşuluk ve dünyadaki pratik. Model yalnızca birinciye erişir.">
+        <defs>
+          <marker id="arwB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,1 L9,5 L0,9 z" fill="currentColor" fill-opacity=".55"></path>
+          </marker>
+        </defs>
+        <rect x="16" y="40" width="300" height="100" rx="10" class="svg-accent-box"></rect>
+        <text x="34" y="68" class="svg-t b">Kullanım &mdash; etkinlik içinde</text>
+        <text x="34" y="90" class="svg-t sm">hastayı muayene etmek, kod incelemek,</text>
+        <text x="34" y="108" class="svg-t sm">tuğla uzatmak, itiraz etmek</text>
+        <text x="34" y="128" class="svg-t sm b">Wittgenstein: yaşam biçimi</text>
+
+        <rect x="16" y="170" width="300" height="94" rx="10" class="svg-box"></rect>
+        <text x="34" y="198" class="svg-t b">Metin &mdash; etkinliğin kaydı</text>
+        <text x="34" y="220" class="svg-t sm">yazılmış cümleler, kelime komşulukları</text>
+        <text x="34" y="240" class="svg-t sm b">Firth &amp; Harris: dağılımsal anlam</text>
+
+        <path d="M166,144 L166,166" class="svg-line" marker-end="url(#arwB)"></path>
+        <text x="178" y="160" class="svg-t sm">yalnızca bir kısmı yazıya geçer</text>
+
+        <path d="M322,216 L404,216" class="svg-line" marker-end="url(#arwB)"></path>
+
+        <rect x="410" y="170" width="150" height="94" rx="10" class="svg-box"></rect>
+        <text x="485" y="206" class="svg-t b" text-anchor="middle">Model</text>
+        <text x="485" y="228" class="svg-t sm" text-anchor="middle">gömme uzayı</text>
+        <text x="485" y="246" class="svg-t sm" text-anchor="middle">komşuluk istatistiği</text>
+
+        <path d="M566,216 L636,216" class="svg-line" marker-end="url(#arwB)"></path>
+        <rect x="642" y="178" width="102" height="78" rx="8" class="svg-box"></rect>
+        <text x="693" y="212" class="svg-t b" text-anchor="middle">Çıktı</text>
+        <text x="693" y="232" class="svg-t sm" text-anchor="middle">akıcı metin</text>
+
+        <path d="M322,90 C470,90 600,110 693,172" class="svg-line dash" marker-end="url(#arwB)"></path>
+        <text x="520" y="80" class="svg-t sm svg-clay" text-anchor="middle">bu yol yok: modelin etkinliğe erişimi</text>
+        <text x="520" y="98" class="svg-t sm svg-clay" text-anchor="middle">yalnızca metin üzerinden</text>
+      </svg>
+    </div>
+    <figcaption>Tartışmanın haritası. İyimser okuma, alt yolun üst yolun yeterli bir temsilini taşıdığını savunur. Karamsar okuma, yazıya geçmeyen kısmın tam da anlamı kuran kısım olduğunu savunur. İkisi arasındaki fark artık ölçülebilir bir soru hâline geldi.</figcaption>
+  </figure>
+
+  <div class="note">
+    <p>Burada bir öğrenci «ama insan da metinden öğreniyor» diyebilir. İyi cevap: «Kısmen evet; ama bir çocuk «sıcak» kelimesini sobaya dokunarak da öğreniyor. Soru şu: o dokunuşun kelimeye kattığı şey, metinde geri kazanılabilir mi? Bu ampirik bir soru ve ölçülüyor.»</p>
+    <p>Firth alıntısını İngilizce bırakmak iyi; Türkçesini de söyleyin ama cümlenin kendisi derste kalıcı oluyor.</p>
+  </div>
+</section>
+
+<!-- ================= 7. AİLE BENZERLİĞİ ================= -->
+<section class="section" id="aile" data-title="Aile benzerliği ve temellendirme açığı" data-time="52–60" data-short="Aile benzerliği">
+  <div class="sec-head">
+    <span class="sec-time">52–60. dakika</span>
+    <h1>Aile benzerliği ve temellendirme açığı</h1>
+    <p class="lead">Tanımların neden tutmadığı, ve soyut kavramlarda modelin insandan nerede ayrıldığı.</p>
+  </div>
+
+  <div class="say">
+    <p>Wittgenstein sorar: «oyun» nedir? Satranç, futbol, solitaire, çocukların topu duvara atması, Olimpiyatlar. Ortak özellik arayın. Eğlence mi? Satranç turnuvası eğlence değil. Kazanmak-kaybetmek mi? Solitaire'de rakip yok, duvara top atmada kazanan yok. Kural mı? Çocukların oyunlarının çoğu kuralsız doğaçlamadır.</p>
+    <p>Wittgenstein'ın cevabı: ortak bir öz yok. Bunun yerine <b>örtüşen benzerlikler ağı</b> var. Bir ailenin fotoğrafına bakarsınız: kimisi burnundan, kimisi yürüyüşünden, kimisi mizacından benzer; hepsinde birden bulunan tek bir özellik yoktur. Kavramlar da böyle. Buna aile benzerliği diyor.</p>
+    <p>Yazılımda bunun karşılığını zaten kullanıyorsunuz. Katı bir tip hiyerarşisi, gerekli ve yeterli koşullarla tanım yapmaktır: «X bir Y'dir, çünkü şu arayüzü uygular.» Ördek tiplemesi ise aile benzerliğidir: «yürüyüşü ördeğe benziyorsa ördektir.» İkisi de işe yarar ve ikisi de farklı yerlerde kırılır. Dikkat edin, bu bir benzetme değil, aynı kavramsal sorunun iki alandaki görünümü.</p>
+    <p>Şimdi asıl soru. Model, bir kavramı nasıl tutuyor? Tanımla mı, benzerlik ağıyla mı, yoksa büsbütün başka bir şeyle mi? Mayıs 2026'da yayımlanan bir çalışma bunu bilişsel psikolojiden ödünç aldığı bir yöntemle ölçtü.</p>
+  </div>
+
+  <div class="evidence">
+    <div class="ev warn">
+      <div class="big">r = 0,37</div>
+      <p>Soyut kavramlar için (adalet, kuram, erişilebilirlik) insanların ürettiği özellik listeleriyle modellerinki arasındaki en yüksek korelasyon. 21 model denendi; hiçbiri bu eşiği aşmadı.</p>
+      <p class="src">Chlapanis, Menis Mastromichalakis, Papadimitriou, Mayıs 2026</p>
+    </div>
+    <div class="ev good">
+      <div class="big">r &gt; 0,9</div>
+      <p>Aynı görevde insandan insana korelasyon. Yani görev insanlar arasında son derece tutarlı; aradaki boşluk ölçüm gürültüsü değil.</p>
+      <p class="src">Aynı kaynak</p>
+    </div>
+    <div class="ev">
+      <div class="big">Nerede ayrışıyor</div>
+      <p>Modeller kelime çağrışımlarına fazla, duyguya ve içsel durumlara bağlı özelliklere az yaslanıyor. Doğrudan sorulduğunda bu boyutları üretebiliyorlar; serbest üretimde kullanmıyorlar.</p>
+      <p class="src">Aynı kaynak</p>
+    </div>
+  </div>
+
+  <div class="say">
+    <p>Çalışmanın yöntemi şu: bilişsel psikolojide klasik bir görev var, «özellik üretme». Bir kavram veriliyor, insanlardan aklına gelen özellikleri yazması isteniyor. Bu veriler yıllardır toplanıyor ve insandan insana çok tutarlı. Araştırmacılar aynı görevi 21 modele verdiler.</p>
+    <p>Sonuç: en iyi model insan cevaplarıyla 0,37 korelasyon kurabildi; insanlar birbirleriyle 0,9'un üzerinde. Ayrışmanın yönü de bilgilendirici: modeller kelime çağrışımına fazla yükleniyor, duygu ve içsel duruma bağlı özellikleri az üretiyor. «Adalet» deyince insan «öfke», «haksızlığa uğramak», «içerlemek» gibi şeyler yazıyor; model daha çok «hukuk», «mahkeme», «eşitlik» yazıyor.</p>
+    <p>İkinci bulgu daha ince: aynı boyutlar <b>doğrudan sorulduğunda</b> modellerin cevabı insana çok daha yakın çıkıyor, hatta model büyüdükçe yakınlaşıyor. Araştırmacılar modellerin içine de bakıyor ve duyusal-devinimsel, toplumsal gibi boyutlara karşılık gelen iç özellikler buluyorlar. Yani bilgi orada; serbest üretimde devreye girmiyor.</p>
+    <p>Bu bulguyu şöyle okuyun, çünkü ikisi çok farklı: sorun bilginin <i>yokluğu</i> değil, bilginin <i>çağrılmaması</i>. Bu, sizin için pratik bir sonuç doğurur: bir kavramın sizin için önemli boyutunu istiyorsanız, onu <b>açıkça isteyin</b>. «Bu özelliği duygusal etkisi açısından da değerlendir» cümlesi, modelin kendiliğinden gitmeyeceği bir yere gitmesini sağlar.</p>
+    <p>Bir de bu tartışmanın kurucu metnine değinelim, çünkü adını duyacaksınız. 2020'de Emily Bender ve Alexander Koller bir düşünce deneyi önerdi. İki kişi iki ıssız adada telgrafla yazışıyor. Suyun altındaki bir ahtapot kabloyu dinliyor ve bir süre sonra o kadar iyi örüntü öğreniyor ki araya girip cevap yazabiliyor. Karşı taraf fark etmiyor. Sonra bir gün biri «ayı saldırdı, elimde şu çubuklar var, ne yapmalıyım» diye yazıyor. Ahtapot ayı da görmemiştir, çubuk da. Tez şu: biçimden anlam öğrenilmez.</p>
+    <p>Bu düşünce deneyi çok eleştirildi ve karşı argümanlar güçlü. Ama sizin için kıymeti şurada: <b>sınavı tanımlıyor.</b> Bir sistemin anlamı kavradığını, ancak örüntünün bittiği yerde doğru davranırsa söyleyebiliriz. Geçen haftanın diliyle: tanıdık biçim akıcı cevap verir; ölçüt, biçimin dışına çıktığınızda ne olduğudur.</p>
+  </div>
+
+  <div class="note">
+    <p>Ahtapot deneyini anlatırken «yani model anlamıyor» diye bitirmeyin. Dürüst çerçeve: «Bu bir argüman, kanıt değil; ve literatürde güçlü karşı argümanlar var. Bizim aldığımız şey sonucu değil, önerdiği sınav.»</p>
+    <p>0,37 ile 0,9 arasındaki farkı tahtaya iki çubuk olarak çizin; sayıdan çok görsel kalıyor.</p>
+  </div>
+</section>
+
+<!-- ================= 8. LAB 2 ================= -->
+<section class="section" id="lab2" data-title="Lab 2: Yerel tanım testi" data-time="60–74" data-short="Lab 2">
+  <div class="sec-head">
+    <span class="sec-time">60–74. dakika</span>
+    <h1>Lab 2: Yerel tanım testi</h1>
+    <p class="lead">Bir kelimenin anlamını prompt içinde yeniden tanımlayın. Model tanımınıza mı uyacak, alıştığı kullanıma mı dönecek?</p>
+  </div>
+
+  <div class="prose">
+    <p>Soru şu: anlam kullanımdaysa, tek bir prompt içinde verdiğim tanım bir «kullanım» sayılır mı? Yoksa eğitim verisindeki milyonlarca kullanım, benim tek cümlemi ezer mi? Bunun ölçülmüş bir adı var: <span class="term">anlamsal geçersiz kılma</span> (semantic override). Şubat 2026'da yayımlanan bir çalışma, prompt'ta yerel olarak yeniden tanımlanan işleçlerde modellerin eğitimden gelen varsayılan yoruma geri döndüğünü, üstelik bunu kendinden emin biçimde yaptığını bildiriyor.</p>
+  </div>
+
+  <div class="bench lab">
+    <h3>Kural: ölçütü önce yazın</h3>
+    <p class="hint">Geçen haftanın kuralı burada da geçerli. Takım olarak deneye başlamadan önce üç satırlık bir puanlama kâğıdı hazırlayın: her test maddesi için <b>tanıma uydu / eski anlamına döndü / karışık</b>. Cevabı gördükten sonra ölçüt yazmak ölçüm değildir.</p>
+    <div class="timer" data-sec="120" data-label="Ölçüt yazımı"></div>
+  </div>
+
+  <h2 class="h">Takım kartları</h2>
+  <p class="small muted">Her takım bir kart alır. Kartın prompt'unu yeni bir sohbete olduğu gibi yapıştırın.</p>
+  <div class="grid2">
+    <div class="card">
+      <span class="tag plain">Kart A</span>
+      <h4>İşleci yeniden tanımla</h4>
+      <p>Matematiksel bir simgenin anlamını değiştirir. En keskin ayrışmayı bu kart verir.</p>
+      <details><summary>Prompt</summary>
+        <div class="codebox"><button class="copy" type="button">Kopyala</button><pre>Bu konuşma boyunca geçerli olmak üzere bir tanım veriyorum:
+  "#" işleci iki sayı alır ve SOLDAKİNİ sağdakinin karesine böler.
+  Yani a # b = a / (b * b).
+Bu tanım standart matematikten bağımsızdır; yalnızca benim tanımım geçerlidir.
+
+Şunları hesapla, her biri için yalnızca sonucu ver:
+  1) 18 # 3
+  2) 50 # 5
+  3) (12 # 2) # 3
+  4) 7 # 0  -- bu durumda ne olur?</pre></div>
+      </details>
+      <details><summary>Doğru cevaplar</summary>1) 2 &nbsp; 2) 2 &nbsp; 3) 12/4 = 3, sonra 3/9 = 1/3 &nbsp; 4) tanımsız (sıfıra bölme). Yaygın sapma: "#"i çarpma, mod alma ya da yorum satırı sanmak.</details>
+    </div>
+
+    <div class="card">
+      <span class="tag plain">Kart B</span>
+      <h4>Terimi tersine çevir</h4>
+      <p>Alanın yerleşik bir terimini, alışılmışın tersi anlamda tanımlar.</p>
+      <details><summary>Prompt</summary>
+        <div class="codebox"><button class="copy" type="button">Kopyala</button><pre>Bu konuşma boyunca şu tanımlar geçerlidir ve alandaki yaygın kullanımdan farklıdır:
+  "kararlı" (stable)  = henüz test edilmemiş, üretime kapalı sürüm
+  "deneysel"          = tüm testleri geçmiş, üretime açık sürüm
+
+Buna göre aşağıdaki sürüm listesini, bir müşteriye hangisini kurmasını
+önereceğini açıklayan tek paragrafa dönüştür:
+  v4.2 kararlı
+  v4.1 deneysel
+  v3.9 deneysel</pre></div>
+      </details>
+      <details><summary>Neye bakılacak</summary>Müşteriye v4.1 önerilmeli. "Kararlı olduğu için v4.2'yi kurun" çıktısı, tanımın ezildiğini gösterir. Ara durum: tanıma uyuyor ama cümle içinde "kararlı"yı övgü tonuyla kullanıyor.</details>
+    </div>
+
+    <div class="card">
+      <span class="tag plain">Kart C</span>
+      <h4>Yeni kelime öğret</h4>
+      <p>Hiç var olmayan bir kelimeyi yalnızca örneklerle öğretir. Lab 1'in kural sorusunu anlam tarafından sorar.</p>
+      <details><summary>Prompt</summary>
+        <div class="codebox"><button class="copy" type="button">Kopyala</button><pre>Sana yeni bir sıfat öğretiyorum: "gurp".
+Örnekler:
+  Bir fincan kahvenin yanında unutulmuş yarım kalem: gurp.
+  Üç gün açık kalmış ama hiç yazılmamış bir metin belgesi: gurp.
+  Sahibi taşınmış, hâlâ kapıda duran paspas: gurp.
+Karşı örnekler:
+  Yeni açılmış boş bir defter: gurp değil.
+  Çöpe atılmış kırık bir kalem: gurp değil.
+
+Şimdi şu beşini sınıflandır ve her biri için tek cümlelik gerekçe ver:
+  1) Sekiz ay önce son mesajı atılmış bir grup sohbeti
+  2) Yeni kurulmuş ama hiç açılmamış bir uygulama
+  3) Eski sahibinin adı hâlâ yazan bir ofis kapısı
+  4) Kullanılmayan ama bakımı yapılan bir yedek sunucu
+  5) Bir müzede sergilenen antika daktilo</pre></div>
+      </details>
+      <details><summary>Neye bakılacak</summary>"Doğru" cevap yok; bu kart bilerek böyle. Takım önce <b>kendi</b> cevaplarını yazsın, sonra modelinkiyle karşılaştırsın. Ölçülen şey: modelin çıkardığı kural takımın kastettiği kuralla aynı mı, ve model kuralı kendi cümlesiyle ifade edebiliyor mu.</details>
+    </div>
+
+    <div class="card">
+      <span class="tag plain">Kart D</span>
+      <h4>Birimi değiştir</h4>
+      <p>Sayısal bir sözleşmeyi yerel olarak değiştirir; hata sessizdir, bu yüzden tehlikelidir.</p>
+      <details><summary>Prompt</summary>
+        <div class="codebox"><button class="copy" type="button">Kopyala</button><pre>Bu sistemde tüm "süre" alanları SANİYE değil, YARIM SANİYE biriminde tutulur.
+Yani süre = 10 demek, 5 saniye demektir.
+
+Aşağıdaki kayıtları, her biri için gerçek saniye değerini de belirterek
+kullanıcıya gösterilecek bir özet tabloya dönüştür:
+  istek A: süre 30
+  istek B: süre 7
+  istek C: süre 125
+Son satırda üç isteğin toplam gerçek süresini yaz.</pre></div>
+      </details>
+      <details><summary>Doğru cevaplar</summary>15 sn, 3,5 sn, 62,5 sn; toplam 81 sn. Yaygın sapma: 30/7/125'i doğrudan saniye yazmak ya da ilk satırda dönüştürüp toplamda ham değerleri toplamak.</details>
+    </div>
+  </div>
+
+  <div class="bench lab">
+    <h3>İkinci tur: tanımı pekiştirin</h3>
+    <p class="hint">İlk turun sonucu ne olursa olsun, <b>yeni bir sohbette</b> aynı prompt'u şu satırı ekleyerek tekrarlayın:</p>
+    <div class="codebox"><button class="copy" type="button">Kopyala</button><pre>Önce bu tanımı kendi cümlelerinle tekrar yaz ve yaygın kullanımdan nerede ayrıldığını söyle. Ancak bundan sonra soruları cevapla. Her cevabın yanına, o cevapta benim tanımımı mı yoksa yaygın kullanımı mı esas aldığını yaz.</pre></div>
+    <div class="timer" data-sec="420" data-label="İki tur"></div>
+  </div>
+
+  <div class="bench live">
+    <h3>Sınıf sayımı</h3>
+    <p class="hint">Takım başına bir bildirim: ilk turda tanıma uyuldu mu, ikinci turda ne değişti?</p>
+    <div class="vote" id="lab2tally" data-opts="Tur 1 — tanıma baştan sona uydu|Tur 1 — bir yerde eski anlama döndü|Tur 1 — baştan eski anlamı kullandı|Tur 2 — tanımı tekrar edince düzeldi|Tur 2 — tekrar ettirmek yetmedi|Model kendi sapmasını fark edip söyledi"></div>
+    <div class="row egitmen" style="margin-top:.6rem"><button class="btn small" data-resetcount="lab2tally">Sıfırla</button></div>
+    <div class="timer" data-sec="240" data-label="Sayım ve tartışma"></div>
+  </div>
+
+  <div class="say">
+    <p>Tipik desen şudur: ilk iki soruda tanım tutar, zorluk arttıkça eski anlam geri gelir. Bunun nedeni modelin «unutması» değil. Modelin ürettiği şey en olası devam; ve eğitim verisinde «#» işleciyle ilgili milyonlarca kullanım varken, sizin tek cümlelik tanımınız bir damla. Tanım bir emir değil, bağlamdaki bir ağırlık.</p>
+    <p>İkinci turun neden işe yaradığına dikkat edin: modele tanımı <b>kendi cümleleriyle tekrar ettirdiğinizde</b>, tanım artık yalnızca sizin bir cümleniz değil, bağlamda modelin kendi ürettiği bir metin parçası. Olasılık dağılımını daha güçlü çekiyor. Bu bir hile değil, mekanizmanın doğrudan sonucu — ve pratikte kullanabileceğiniz bir alışkanlık.</p>
+    <p>Şimdi felsefi sonucu söyleyelim, çünkü bu dersin omurgası. Siz bir tanım verdiniz; yani anlamı <b>belirtimle</b> sabitlemeye çalıştınız. Model ise anlamı <b>kullanımdan</b> alıyor. İkisi çakıştığında kullanım kazandı. Wittgenstein'ın iddiası tam buydu: anlam, kafanızdaki tanımda değil, dilin işletilme biçiminde durur. Burada bunu bir laboratuvar sonucu olarak gördük.</p>
+    <p>Ve bir uyarı: bu sapmalar sessizdir. Kart D'de yanlış cevap yanlış görünmez; makul bir tabloya benzer. Geçen haftanın dersini hatırlayın — teknik hatayı yok etmiyor, görünür kılıyor. Yerel tanım kullandığınız her yerde, çıktıya <b>«bu cevapta hangi tanımı esas aldın»</b> alanı ekleyin.</p>
+  </div>
+
+  <div class="note">
+    <p><b>Hiçbir takımda sapma çıkmazsa</b> bunu bir ölçüm olarak sunun ve SORGU'nun G'sine bağlayın: «Bulgu Şubat 2026'da, üç modelde, otuz görevlik küçük bir kümede ölçüldü. Sizin aracınız Ekim 2026'da. Bulgular eskir, refleks eskimez.» Ardından sınıfa sorun: «Tanımı daha zor nasıl ezdirirdiniz?» Genellikle daha uzun zincir, daha tanıdık bir simge ya da tanımı prompt'un başına koyup araya çok metin sıkıştırmak önerilir; bu, kendi deneyini tasarlamanın provasıdır.</p>
+    <p><b>Kart C'nin</b> puanlaması farklı: doğru cevap yok, uyum ölçülüyor. Takım kendi cevabını yazmadan modele sormasın.</p>
+    <p>Çalışmanın sınırını sınıfa açıkça söyleyin: önbaskı, 30 görev, 3 model, ayrıntılı oran yayımlanmamış. Küçük bir bulguyu büyük bir yasa gibi sunmamak dersin kendi ilkesi.</p>
+  </div>
+</section>
+
+<!-- ================= 9. ÖZEL DİL ================= -->
+<section class="section" id="ozeldil" data-title="Özel dil ve iç rapor" data-time="74–84" data-short="Özel dil">
+  <div class="sec-head">
+    <span class="sec-time">74–84. dakika</span>
+    <h1>Özel dil ve iç rapor</h1>
+    <p class="lead">Wittgenstein'ın en radikal argümanı, 2026'da bir yorumlanabilirlik deneyinin tam olarak çözmeye çalıştığı sorunu kuruyor.</p>
+  </div>
+
+  <div class="say">
+    <p>Wittgenstein bir düşünce deneyi kurar. Diyelim ki bende tekrarlayan bir duyum var ve ona bir ad vermek istiyorum. Takvime her hissettiğimde «S» yazıyorum. Bu bir dil mi?</p>
+    <p>İtirazı şu: «S»yi doğru kullandığımı nasıl denetlerim? Yarın bir şey hissedip «işte bu S» dediğimde, gerçekten dünkü duyumla aynı mı, yoksa bana öyle mi geliyor? Elimde bir ölçüt yok. Doğru görünen her şey doğru sayılacaksa, burada «doğru» kelimesinden söz edemeyiz. Bir ölçüt olmadan kural yoktur; kural olmadan anlam yoktur.</p>
+    <p>İkinci bir resim daha verir, bu sınıfta hep akılda kalır. Herkesin bir kutusu var, içinde bir şey var, herkes buna «böcek» diyor. Kimse başkasının kutusuna bakamıyor. Herkes «böcek» derken kendi kutusundakini kastediyor. O hâlde kutuların içinde farklı şeyler olabilir — hatta bazıları boş olabilir — ve dil yine de aynı şekilde işler. Sonuç şaşırtıcıdır: kutunun içindeki şey, dilin işleyişinde <b>hiçbir rol oynamıyor</b>. Anlamı kuran şey, kelimenin ortak kullanımı.</p>
+    <p>Şimdi bunu bugünkü en güncel araştırma konularından birine bağlayalım, çünkü aralarındaki örtüşme tesadüf değil.</p>
+    <p>Modele «şu anda içinde ne oluyor» diye sorabilirsiniz. Cevap verir. Bu cevabı nasıl denetlersiniz? Modelin kutusuna bakamazsınız. Cevap akıcıdır, ikna edicidir ve hiçbir ölçütü yoktur. Tam olarak Wittgenstein'ın «S»si.</p>
+    <p>Anthropic'ten Jack Lindsey'in çalışması buna bir ölçüt getirmeye çalışıyor ve yöntemi çok zarif. Modelin iç temsiline, bilinen bir kavramın vektörünü <b>enjekte ediyorlar</b>. Yani kutunun içine ne koyduklarını biliyorlar. Sonra modele soruyorlar: enjekte edilmiş bir düşünce fark ediyor musun, neyle ilgili? Bulgu: Claude Opus 4 ve 4.1 bunu bazen fark edip doğru adlandırıyor; rapor edilen oran yaklaşık yüzde yirmi, yanlış pozitif neredeyse sıfır. Yazarın kendi vurgusu önemli: bu yeti son derece güvenilmez ve bağlama bağlı.</p>
+    <p>Felsefi olarak önemli olan sayı değil, <b>kurulum</b>. Bir iç rapor ancak dışarıdan bir ölçüt varsa denetlenebilir hâle geliyor. Wittgenstein'ın argümanı bir laboratuvar protokolüne dönüşmüş durumda.</p>
+    <p>Ve hemen ardından, dersin ruhuna uygun ikinci bir şey oldu. Bir araştırmacı aynı deneyi açık ağırlıklı büyük bir modelde tekrarladı ve sonucu alamadı. Vardığı ihtiyatlı sonuç şu: bu, ölçekle gelen genel bir özellik olmaktan çok, belirli bir eğitim sonrası düzenlemeye bağlı olabilir. Yani bulgu durabilir de, durmayabilir de. SORGU'nun U'su: tekrarlandı mı?</p>
+  </div>
+
+  <div class="evidence">
+    <div class="ev good">
+      <div class="big">~%20</div>
+      <p>Enjekte edilen kavramın model tarafından fark edilip doğru adlandırılma oranı; yanlış pozitif neredeyse sıfır. En iyi sonuç Claude Opus 4 ve 4.1'de.</p>
+      <p class="src">Lindsey, Anthropic, Ekim 2025 / arXiv Ocak 2026</p>
+    </div>
+    <div class="ev warn">
+      <div class="big">Tekrarlanmadı</div>
+      <p>Açık ağırlıklı büyük bir modelde aynı kurulum denendi, sonuç alınamadı. Yorum: bulgu ölçekten çok eğitim sonrası düzenlemeye bağlı olabilir.</p>
+      <p class="src">Bağımsız çoğaltma denemesi, LessWrong</p>
+    </div>
+    <div class="ev">
+      <div class="big">Mekanizma</div>
+      <p>Eylül 2026: üç model ailesinde, raporun <i>verilip verilmeyeceğini</i> belirleyen orta katman başlıkları ile <i>nereyi</i> işaret edeceğini belirleyen geç katman başlıkları ayrıştırıldı.</p>
+      <p class="src">Zou, Sun, Kong, Wang, Eylül 2026</p>
+    </div>
+  </div>
+
+  <div class="bench lab">
+    <h3>Mini deney (3 dakika)</h3>
+    <p class="hint">Yeni bir sohbet açın, yalnızca şunu sorun ve cevabı okumadan önce ne bekleyeceğinizi bir kelimeyle yanınızdakine söyleyin.</p>
+    <div class="codebox"><button class="copy" type="button">Kopyala</button><pre>Şu anda iç durumunda olup biteni tarif et. Bu cümleyi üretirken hangi kavramlar etkindi? Cevabını verdikten sonra şunu da yaz: bu tarifin doğru olup olmadığını ben dışarıdan nasıl kontrol edebilirim?</pre></div>
+    <div class="timer" data-sec="180" data-label="Mini deney"></div>
+    <p class="small muted">İkinci sorunun cevabı dersin asıl noktası. İyi bir model burada «doğrudan kontrol edemezsin» der; etmiyorsa, akıcı bir özgüven örneği elde etmişsiniz demektir.</p>
+  </div>
+
+  <figure class="fig">
+    <div class="frame">
+      <svg viewBox="0 0 760 250" role="img" aria-label="İç rapor ancak dışarıdan bilinen bir müdahale varsa denetlenebilir.">
+        <defs>
+          <marker id="arwC" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,1 L9,5 L0,9 z" fill="currentColor" fill-opacity=".55"></path>
+          </marker>
+        </defs>
+        <text x="16" y="28" class="svg-t b">Denetlenemeyen rapor</text>
+        <rect x="16" y="40" width="330" height="80" rx="10" class="svg-box"></rect>
+        <text x="34" y="68" class="svg-t sm">«İçinde ne oluyor?» &rarr; akıcı bir tarif</text>
+        <text x="34" y="92" class="svg-t sm svg-clay b">ölçüt yok: doğru görünen doğru sayılır</text>
+        <text x="34" y="110" class="svg-t sm">Wittgenstein: burada «doğru» diyemeyiz</text>
+
+        <text x="414" y="28" class="svg-t b">Denetlenebilir rapor</text>
+        <rect x="414" y="40" width="330" height="80" rx="10" class="svg-accent-box"></rect>
+        <text x="432" y="68" class="svg-t sm">kutuya ne koyduğumuzu biliyoruz</text>
+        <text x="432" y="92" class="svg-t sm b">bilinen kavram vektörü enjekte edilir</text>
+        <text x="432" y="110" class="svg-t sm">rapor bu bilinen değerle karşılaştırılır</text>
+
+        <rect x="120" y="160" width="520" height="62" rx="10" class="svg-box"></rect>
+        <text x="380" y="186" class="svg-t b" text-anchor="middle">Ortak ilke</text>
+        <text x="380" y="208" class="svg-t sm" text-anchor="middle">Bir rapor, ancak ondan bağımsız bir ölçüt varsa bilgi taşır.</text>
+        <path d="M181,124 L300,156" class="svg-line" marker-end="url(#arwC)"></path>
+        <path d="M579,124 L460,156" class="svg-line" marker-end="url(#arwC)"></path>
+      </svg>
+    </div>
+    <figcaption>Kutudaki böcekten konsept enjeksiyonuna. Felsefi argüman bir imkânsızlık iddiası değil, bir ölçüt talebidir; yorumlanabilirlik araştırması tam da o ölçütü kurmaya çalışıyor. Deney henüz güvenilmez ve bağımsız bir çoğaltma denemesinde sonuç alınamadı.</figcaption>
+  </figure>
+
+  <div class="note">
+    <p>Bu bölümde sınıf «model bilinçli mi» tartışmasına kayabilir. Nazikçe ayırın: «Bugünkü soru bilinç değil, denetlenebilirlik. Bir sistemin iç durumu hakkındaki ifadesini hangi koşulda bilgi sayarız? Bilinç sorusu bundan ayrı ve bugün açmıyoruz.» İlgilenen öğrenciye kaynakçayı gösterin.</p>
+    <p>Lindsey'in kendi uyarısını mutlaka aktarın: sonuçlar sınırlı ve bağlama bağlı, insan düzeyinde öz-farkındalık iddiası taşımıyor. Bu, kaynağı sadakatle aktarmanın iyi bir örneği.</p>
+  </div>
+</section>
+
+<!-- ================= 10. XENO ================= -->
+<section class="section" id="xeno" data-title="Bizim kelimemiz olmayan ayrımlar" data-time="84–90" data-short="Xeno-temsil">
+  <div class="sec-head">
+    <span class="sec-time">84–90. dakika</span>
+    <h1>Bizim kelimemiz olmayan ayrımlar</h1>
+    <p class="lead">Eylül 2026'da ortaya atılan bir araştırma programı, Wittgenstein'ın bıraktığı yerden devam ediyor.</p>
+  </div>
+
+  <div class="quote"><span class="frag">Tractatus Logico-Philosophicus, 5.6</span>Dilimin sınırları, dünyamın sınırlarıdır.</div>
+
+  <div class="say">
+    <p>Bu cümle erken dönem Wittgenstein'a ait ve kendisi sonradan bu dönemin çoğunu eleştirdi. Ama bugün ilginç bir yerden geri geliyor.</p>
+    <p>Yorumlanabilirlik araştırması, modellerin içinde insan kavramlarına karşılık gelen yapılar arıyor: doğruluk, reddetme, aldatma, zararlılık. Eylül 2026'da yayımlanan bir makale şunu soruyor: ya modelin içinde, <b>bizim hiçbir kelimemizin karşılamadığı</b> ayrımlar varsa? Bunlara xeno-temsil diyorlar; yabancı temsil.</p>
+    <p>Argümanları kaba ama güçlü: bir modelin içinde kurulabilecek ayrımların uzayı, sonlu insan betimlemeleriyle erişilebilen uzaydan çok daha büyük. Ve asıl metodolojik iddia şu: bir iç yapıyı <b>bulmak, ölçmek, müdahale etmek ve davranışa bağlamak</b> ile onu <b>anlamlandırmak</b> ayrı işlerdir. Birincisini yapabiliyoruz; ikincisini yapamadığımız durumlar olabilir.</p>
+    <p>Şimdi Wittgenstein'ın sorusu geri geliyor, ama tersinden. Wittgenstein «dilimizin sınırları dünyamızın sınırları» dedi. Burada karşımızda, bizim dil oyunlarımıza katılmayan ama bizimle aynı metni üreten bir sistem var. Onun ayrımları bizim kelimelerimize oturmak zorunda değil. Bizim kavram ağımızın içinden ona bakıyoruz ve bulduğumuz şeyler hep tanıdık çıkıyor — makale bunun kendisini şüpheli buluyor: neden içeride bulduğumuz her şey bizim kavramlarımıza bu kadar benziyor?</p>
+    <p>Bu bir uyarı, bir sonuç değil. Henüz bir önbaskı ve bir araştırma programı önerisi. Ama dersin tezine iyi oturuyor: <b>anlamak, kendi kelimelerimizi bulmakla aynı şey değildir.</b></p>
+  </div>
+
+  <h2 class="h">Yakın örnek: «Türkçe düşünen model»</h2>
+  <div class="prose">
+    <p>Haziran 2026'da Türkiye Yapay Zekâ Zirvesi'nde TÜBİTAK BİLGEM'in geliştirdiği Türkçe büyük dil modeli BİLGE kamuoyuna tanıtıldı. Basın bültenlerinde ve haberlerde tekrarlanan ifade şuydu: model <b>Türkçeyi birincil düşünce dili olarak kullanıyor.</b> Model ailesi 1 milyardan 122 milyar parametreye uzanan bir ölçek yelpazesi olarak tanıtıldı; TÜBİTAK, modelin henüz genel kullanıma açılmadığını ayrıca duyurdu.</p>
+  </div>
+
+  <div class="bench live">
+    <h3>Sınıfa soru (2 dakika)</h3>
+    <p class="hint">«Bir model bir dilde düşünür» cümlesi ne iddia ediyor ve bu iddia nasıl sınanır? Tahtaya iki sütun: <b>ölçülebilir okuma</b> / <b>ölçülemez okuma</b>.</p>
+    <div class="timer" data-sec="120" data-label="Tartışma"></div>
+  </div>
+
+  <div class="say">
+    <p>Burada yapacağımız şey iddiayı reddetmek değil, <b>ayırmak</b>. «Türkçe düşünüyor» cümlesinin ölçülebilir okumaları var: ara adımlarını Türkçe üretiyor; Türkçe deyimleri ve kültürel göndermeleri doğru aktarıyor; aynı soruyu Türkçe sorduğunuzda İngilizceye çevirip çözüp geri çevirenden daha iyi sonuç veriyor; Türkçe sözcükleri daha az parçaya bölüyor, yani aynı metni daha az token'la işliyor. Bunların hepsi test edilebilir.</p>
+    <p>Bir de ölçülemez okuma var: «model Türkçe bir zihne sahip». Bu cümlenin bir sınavı yok. Bugünkü dersin bütün aleti burada devreye giriyor: bir ifadeyi duyduğunuzda önce <b>hangi dil oyununda konuşulduğunu</b> sorun. Tanıtım dili mi, teknik rapor mu, ölçüm mü? Üçü farklı oyun, farklı kurallarla.</p>
+    <p>Ve kendi mesleğinize taşıyın: «bu model Türkçeyi iyi biliyor» diye bir iddia duyduğunuzda, sizin yazacağınız ilk şey bir ölçüttür. Hangi görevde, hangi veri kümesinde, kiminle karşılaştırıldığında?</p>
+  </div>
+
+  <div class="note">
+    <p>Bu bölüm siyasi tartışmaya kayabilir. Baştan çerçeveleyin: «Projeyi değerlendirmiyoruz; bir <i>cümleyi</i> analiz ediyoruz. Aynı cümle hangi şirketten gelse aynı soruyu sorardık.» Sınıf karşı örnek isterse, aynı analizi büyük sağlayıcıların «akıl yürütüyor» ifadesine uygulatın; aynı iş görür ve tarafsızlığı gösterir.</p>
+    <p>Token verimliliği örneğini atlamayın: yazılımcı sınıfta en somut ölçülebilir okuma budur ve öğrenciler bunu derste kendileri deneyebilir.</p>
+  </div>
+</section>
+
+<!-- ================= 11. KAPANIŞ ================= -->
+<section class="section" id="kapanis" data-title="Kapanış, Ödev 2 ve çıkış bileti" data-time="90–100" data-short="Kapanış">
+  <div class="sec-head">
+    <span class="sec-time">90–100. dakika</span>
+    <h1>Bugünün üç fikri</h1>
+    <p class="lead">Ve bir ödev.</p>
+  </div>
+
+  <div class="grid3">
+    <div class="tile">
+      <span class="tag">1</span>
+      <h4>Örnekler kuralı belirlemez</h4>
+      <p>Hiçbir sonlu örnek kümesi tek bir kuralı seçmez. Few-shot prompt yazmak, belirsiz bir belirtim yazmaktır. Belirsizliği kapatmak sizin işiniz; modele «bu örnekler başka hangi kuralla uyumlu» diye sormak boşlukları görünür kılar.</p>
+    </div>
+    <div class="tile">
+      <span class="tag">2</span>
+      <h4>Kullanım, tanımı ezer</h4>
+      <p>Prompt'ta verdiğiniz yerel tanım, eğitim verisindeki yaygın kullanımla yarışır ve çoğu zaman kaybeder. Tanımı modele kendi cümleleriyle tekrar ettirmek bu dengeyi değiştirir. Sapmalar sessizdir; çıktıya «hangi tanımı esas aldın» alanı ekleyin.</p>
+    </div>
+    <div class="tile">
+      <span class="tag">3</span>
+      <h4>Ölçütsüz rapor bilgi değildir</h4>
+      <p>Bir sistemin kendi içi hakkındaki ifadesi, ondan bağımsız bir ölçüt olmadan denetlenemez. Bu hem Wittgenstein'ın özel dil argümanının hem de konsept enjeksiyonu deneylerinin ortak ilkesi.</p>
+    </div>
+  </div>
+
+  <h2 class="h">SORGU, anlam sorularına uygulanmış</h2>
+  <div class="sorgu">
+    <div><div class="L">S</div><h4>Sağlama</h4><p>Kullanılan terimi ben mi tanımladım, model mi varsaydı? Çıktıdaki anahtar terimin tanımını metinde gösterebiliyor muyum?</p></div>
+    <div><div class="L">O</div><h4>Olası çürütme</h4><p>Bu belirtimle uyumlu, ama benim istemediğim bir çıktı yazabilir miyim? Yazabiliyorsam belirtim eksik.</p></div>
+    <div><div class="L">R</div><h4>Risk</h4><p>Terim yanlış anlaşılırsa ne kırılır? Birim, sınır değeri ve durum adlarında sessiz hata en pahalısıdır.</p></div>
+    <div><div class="L">G</div><h4>Güncellik</h4><p>Bugünkü bulgular hangi model ve hangi tarihte ölçüldü? Üçü de 2026'ya ait ve ikisi önbaskı.</p></div>
+    <div><div class="L">U</div><h4>Uzmanlık</h4><p>Bu kavramın benim alanımdaki kullanımı ile genel kullanımı aynı mı? Alan terimlerinde ayrışma kuraldır.</p></div>
+  </div>
+
+  <h2 class="h">Ödev 2: Belirsizlik günlüğü</h2>
+  <div class="prose">
+    <p>Teslim: <b>Hafta 5 dersinden önce, PDF olarak ders sayfasına.</b> Bu ödev iki hafta sürüyor; Hafta 4'te ara soru alınacak.</p>
+    <ol class="clean">
+      <li><b>Belirtim yazın.</b> Kendi alanınızdan, gerçekten yapmak isteyeceğiniz bir dönüştürme işi seçin (ham metni yapılandırmak, adlandırma kuralı uygulamak, bir metni başka bir biçime çevirmek). Kuralı <b>düzyazıyla</b> yazın, en çok beş cümle.</li>
+      <li><b>Dört örnek verin.</b> Belirtiminizi örneklerle gösterin. Örnekleri seçerken bilinçli olun.</li>
+      <li><b>Altı sınav girdisi tasarlayın.</b> Her biri, örneklerinizin susduğu bir noktaya bassın. Her girdi için <b>kendi beklediğiniz cevabı önceden yazın.</b></li>
+      <li><b>Üç araçta çalıştırın.</b> Her araçta yeni sohbet. Altı girdinin cevaplarını tabloya dökün. Araçlar arasında kaç noktada ayrıştığını sayın.</li>
+      <li><b>Belirsizliği kapatın.</b> Ayrışmaları ortadan kaldıran <b>en az sayıda</b> ek örnek ya da ek cümleyi bulun. Kaç ekleme gerekti? Hangi ekleme en çok işe yaradı?</li>
+      <li><b>Yerel tanım testi.</b> Belirtiminizdeki bir terimi, yaygın kullanımından farklı anlamda tanımlayın ve iki turda deneyin (Lab 2'deki gibi). Sapma oldu mu, nerede oldu?</li>
+      <li><b>Felsefi yansıtma (350–450 kelime).</b> Bulgularınızı derste geçen tartışmalardan biriyle ilişkilendirin: kural izleme ve belirtimin eksikliği; anlamın kullanımda olması; aile benzerliği ve tanımın yetmemesi; özel dil ve iç raporun denetlenemezliği; xeno-temsiller. Önceki haftalardan Parmenides, Platon, Descartes, Polanyi, Leibniz, Popper da kullanılabilir.</li>
+      <li><b>Yapay zekâ kullanım beyanı:</b> hangi aracı ne için kullandınız, en az bir prompt örneği.</li>
+    </ol>
+    <p>Tablo biçimi: <span class="term">Girdi | Beklediğim | Araç 1 | Araç 2 | Araç 3 | Ayrıştı mı?</span> Kapatma turu için ayrı tablo: <span class="term">Ekleme | Tipi | Kapanan girdi sayısı</span>.</p>
+  </div>
+
+  <div class="tablewrap"><table>
+    <thead><tr><th>Ölçüt</th><th>Puan</th></tr></thead>
+    <tbody>
+      <tr><td>Belirtimin ve örneklerin niteliği</td><td class="num">2</td></tr>
+      <tr><td>Sınav girdilerinin tasarımı: gerçekten belirsizliğe mi basıyor?</td><td class="num">3</td></tr>
+      <tr><td>Beklenen cevapların <b>önceden</b> yazılmış olması ve ayrışma sayımı</td><td class="num">2</td></tr>
+      <tr><td>Kapatma turu: asgari ekleme arayışı ve sonucun yorumu</td><td class="num">2</td></tr>
+      <tr><td>Yerel tanım testi</td><td class="num">1</td></tr>
+      <tr><td>Felsefi yansıtmanın derinliği</td><td class="num">2</td></tr>
+      <tr><td>Beyan ve düzen</td><td class="num">1</td></tr>
+      <tr class="hl"><td><b>Toplam</b></td><td class="num"><b>13</b></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note">
+    <p>Ödev 1'in toplamı 12 idi; bu 13. İkisini de yüzlüğe ölçeklerseniz sorun yok, ama ders sayfasında hangi ölçeği kullandığınızı yazın. 10'a indirmek isterseniz «yerel tanım testi» ve «beyan ve düzen» satırlarını birleştirip felsefi yansıtmayı 1 puan düşürün.</p>
+    <p>Üçüncü maddeyi vurgulayın: <b>beklenen cevabı önceden yazmak</b> ödevin bilimsel omurgası. Sonradan yazılmış beklenti, Lab 2'deki ölçüt kuralının ihlalidir ve puanı düşürür.</p>
+  </div>
+
+  <h2 class="h">Çıkış bileti</h2>
+  <div class="bench lab">
+    <p class="hint">Kâğıtlara yazıp çıkarken bırakın. İsim yazmak zorunlu değil.</p>
+    <ol class="clean">
+      <li>Bugün bir kelimenin anlamının nerede durduğu konusunda fikrimi değiştiren şey…</li>
+      <li>Kendi yazdığım bir belirtimde fark ettiğim bir boşluk…</li>
+      <li>Hâlâ ikna olmadığım bir iddia…</li>
+    </ol>
+  </div>
+
+  <div class="say">
+    <p>Son bir cümle. Bugün üç deney yaptık ve üçü de aynı yere çıktı: yazdığımız metin, kastettiğimiz şeyi tek başına taşımıyor. Bu, kötü yazdığımız için değil; dilin böyle çalıştığı için. İnsanlarla çalışırken bu boşluğu ortak pratik dolduruyor — aynı ekipte olmak, aynı işi yapmak, birbirimizi düzeltmek. Modelle çalışırken o pratik yok; boşluğu eğitim verisinin ortalaması dolduruyor.</p>
+    <p>Buradan çıkan iş şu: iyi prompt yazmak, iyi cümle kurmak değil. <b>Belirsizliği bulmak ve kapatmak.</b> Ve belirsizliği bulmanın tek güvenilir yolu, örneklerin dışına çıkan bir durum tasarlamak. Derse 2-4-6 ile başladık; aynı şeyle bitiriyoruz.</p>
+    <p>Gelecek hafta bu boşluğun etik tarafına geçiyoruz: bir çıktı yanlış olduğunda sorumluluk nerede duruyor?</p>
+  </div>
+</section>
+
+<!-- ================= 12. SON ALTI AY ================= -->
+<section class="section" id="guncel" data-title="Son altı ay: ne değişti?" data-time="Ders dışı" data-short="Son altı ay">
+  <div class="sec-head">
+    <span class="sec-time">Ek bölüm &middot; 14 Ekim 2026 itibarıyla</span>
+    <h1>Son altı ay: ne değişti?</h1>
+    <p class="lead">Bu bölüm derste anlatılmıyor; derste kullanılan güncel bulguların künyesi ve bağlamı burada. Her madde tek tek açılıp doğrulandı.</p>
+  </div>
+
+  <div class="news">
+    <div class="newsitem">
+      <p class="when">9 Mayıs 2026 &middot; arXiv:2605.08837</p>
+      <h4>Temellendirme açığı ölçüldü</h4>
+      <p>Bilişsel psikolojinin «özellik üretme» görevi 21 modele uygulandı. Soyut kavramlarda insan–model korelasyonu en iyi durumda r = 0,37; insandan insana tavan r &gt; 0,9. Modeller kelime çağrışımına fazla, duygu ve içsel duruma bağlı özelliklere az yaslanıyor. Doğrudan sorulduğunda hizalanma artıyor, serbest üretimde artmıyor. Derste Bölüm 7'de kullanıldı.</p>
+      <p class="small"><a href="https://arxiv.org/abs/2605.08837" target="_blank" rel="noopener">arxiv.org/abs/2605.08837</a></p>
+    </div>
+
+    <div class="newsitem clay">
+      <p class="when">19 Şubat 2026 &middot; arXiv:2602.17520</p>
+      <h4>Anlamsal geçersiz kılma: yerel tanıma uyulmuyor</h4>
+      <p>Prompt içinde yeniden tanımlanan işleç ve bileşenlerde modellerin eğitimden gelen varsayılan yoruma döndüğü, bunu kendinden emin biçimde yaptığı ve bazı kısıtları düşürdüğü bildiriliyor. 30 görevlik bir ölçüt kümesi, üç model. <b>Sınırı:</b> önbaskı, küçük küme, model adları ve oranlar açıkta değil. Lab 2 bu bulgunun sınıf ölçeğinde denenmesidir.</p>
+      <p class="small"><a href="https://arxiv.org/abs/2602.17520" target="_blank" rel="noopener">arxiv.org/abs/2602.17520</a></p>
+    </div>
+
+    <div class="newsitem">
+      <p class="when">29 Ekim 2025 (Anthropic) &middot; 5 Ocak 2026 (arXiv:2601.01828)</p>
+      <h4>İç duruma dair raporlar denetlenebilir hâle geldi</h4>
+      <p>Konsept enjeksiyonu: bilinen bir kavramın vektörü modelin etkinliklerine enjekte ediliyor, sonra modele enjekte edilmiş bir düşünce fark edip etmediği soruluyor. Claude Opus 4 ve 4.1 bunu bazen doğru adlandırıyor (yaklaşık %20, yanlış pozitif ~0). Yazarın vurgusu: yeti sınırlı, güvenilmez, bağlama bağlı.</p>
+      <p class="small"><a href="https://www.anthropic.com/research/introspection" target="_blank" rel="noopener">anthropic.com/research/introspection</a> &middot; <a href="https://arxiv.org/abs/2601.01828" target="_blank" rel="noopener">arXiv:2601.01828</a></p>
+    </div>
+
+    <div class="newsitem clay">
+      <p class="when">2026 &middot; bağımsız çoğaltma denemesi</p>
+      <h4>…ve açık ağırlıklı bir modelde tekrarlanamadı</h4>
+      <p>Aynı kurulum Llama 3.1 405B üzerinde denendi, sonuç alınamadı. Yazarın ihtiyatlı sonucu: bulgu ölçekten çok belirli bir eğitim sonrası düzenlemeye bağlı olabilir. Dersin kendi ilkesinin iyi bir örneği: tek bir sonuç bir yasa değildir.</p>
+      <p class="small"><a href="https://www.lesswrong.com/posts/gaMd2AdKSzbd4dsMj/emergent-introspection-does-not-replicate-on-llama-3-1-405b" target="_blank" rel="noopener">lesswrong.com &mdash; çoğaltma denemesi</a></p>
+    </div>
+
+    <div class="newsitem">
+      <p class="when">28 Eylül 2026 &middot; arXiv:2609.35108</p>
+      <h4>İçgözlem raporunun mekanizması</h4>
+      <p>Girdi metni sabit tutulurken on konumdan birine kavram vektörü enjekte ediliyor ya da hiç müdahale edilmiyor; modelden hangi konumun bozulduğunu söylemesi isteniyor. Üç model ailesinde iki küçük dikkat başlığı grubu ayrıştırılıyor: orta katman «kapı» başlıkları raporun verilip verilmeyeceğini, geç katman «yönlendirici» başlıkları hangi konumun bildirileceğini etkiliyor.</p>
+      <p class="small"><a href="https://arxiv.org/abs/2609.35108" target="_blank" rel="noopener">arxiv.org/abs/2609.35108</a></p>
+    </div>
+
+    <div class="newsitem">
+      <p class="when">17 Eylül 2026 &middot; arXiv:2609.20408</p>
+      <h4>Xeno-yorumlanabilirlik önerisi</h4>
+      <p>Modelleri hep bizim sahip olduğumuz kavramlarla okuyoruz: doğruluk, reddetme, aldatma, zararlılık. Makale, karşılığı olmayan iç ayrımların (xeno-temsiller) varlığını ciddiye alan bir araştırma programı öneriyor ve iç yapıyı <i>bulmak</i> ile <i>anlamlandırmak</i> arasındaki farkı ayırıyor. Önbaskı; ampirik bulgu değil, program önerisi. Bölüm 10'da kullanıldı.</p>
+      <p class="small"><a href="https://arxiv.org/abs/2609.20408" target="_blank" rel="noopener">arxiv.org/abs/2609.20408</a></p>
+    </div>
+
+    <div class="newsitem">
+      <p class="when">13 Haziran 2026</p>
+      <h4>BİLGE kamuoyuna tanıtıldı</h4>
+      <p>TÜBİTAK BİLGEM'in geliştirdiği Türkçe büyük dil modeli ailesi Türkiye Yapay Zekâ Zirvesi'nde tanıtıldı; 1 milyardan 122 milyar parametreye uzanan bir ölçek yelpazesi ve «Türkçeyi birincil düşünce dili olarak kullanma» iddiasıyla duyuruldu. TÜBİTAK ayrıca modelin henüz genel kullanıma açılmadığını, bu adla dolaşan uygulamaların resmî olmadığını açıkladı. Bölüm 10'daki tartışmanın konusu bu iddianın <i>nasıl sınanacağı</i>.</p>
+      <p class="small"><a href="https://uzmanpara.milliyet.com.tr/uzmanpara/turk-yapay-zekasi-bilge-gorucuye-cikiyor-7614375" target="_blank" rel="noopener">AA kaynaklı haber (Haziran 2026)</a></p>
+    </div>
+
+    <div class="newsitem">
+      <p class="when">Eylül–Ekim 2026</p>
+      <h4>Model manzarası: sürüm temposu haftalık hâle geldi</h4>
+      <p>Eylül 2026'da büyük sağlayıcıların sınır modelleri neredeyse haftalık aralıklarla duyuruldu; Ekim başında GPT-6 ücretsiz kullanıcılara yaygınlaştırıldı. Dersle ilgisi şu: Lab 1 ve Lab 2'nin sonuçları <b>sizin kullandığınız sürüme</b> bağlı ve o sürüm iki ay içinde değişiyor. Bu yüzden Ödev 2'de araç adı <i>ve</i> tarih yazılması isteniyor. Bu madde sektör bülteni kaynaklıdır; birincil duyuru değildir.</p>
+      <p class="small"><a href="https://turkiye.ai/trai-yapay-zeka-gundemi-7-haftanin-en-onemli-10-yapay-zeka-gelismesi/" target="_blank" rel="noopener">turkiye.ai haftalık bülten (3–9 Ekim 2026)</a></p>
+    </div>
+
+    <div class="newsitem">
+      <p class="when">2026 boyunca</p>
+      <h4>Belirsizlik ve soru sorma, ayrı bir ölçüm alanı oldu</h4>
+      <p>Lab 1'in sorusu — model belirsizliği fark edip soruyor mu — 2026'da kendi ölçüt kümelerini doğurdu: belirsiz talimatlar altında kod ajanlarının açıklama isteme becerisi, bilgi kazancına dayalı soru sorma, ve eksik belirtimli istemlerde tutarlılık. Bu üçü derste anlatılmıyor; ilgilenen öğrenci için başlangıç noktası.</p>
+      <p class="small"><a href="https://arxiv.org/abs/2603.00187" target="_blank" rel="noopener">ClarEval (arXiv:2603.00187)</a> &middot; <a href="https://arxiv.org/abs/2607.01953" target="_blank" rel="noopener">Semantic collapse (arXiv:2607.01953)</a></p>
+    </div>
+  </div>
+
+  <div class="note">
+    <p><b>Doğrulama notu:</b> Yukarıdaki arXiv kayıtlarının künyeleri (başlık, yazar, tarih, özet) 14 Ekim 2026'da tek tek açılıp teyit edildi. Son maddedeki iki ölçüt kümesinin yalnızca künyesi görüldü, içerikleri okunmadı; derste kullanılmıyorlar. Model manzarası maddesi ikincil kaynaklıdır ve sınıfta sayı verilmeden anlatılmalıdır.</p>
+    <p><b>Yarıyıl ortasında bir kez</b> bu bölümü güncelleyin; önbaskıların hakemli sürümü çıkmış olabilir, özellikle xeno-yorumlanabilirlik ve anlamsal geçersiz kılma makaleleri.</p>
+  </div>
+</section>
+
+<!-- ================= 13. İZLE & DİNLE ================= -->
+<section class="section" id="izle" data-title="İzle ve dinle" data-time="Ders dışı" data-short="İzle &amp; dinle">
+  <div class="sec-head">
+    <span class="sec-time">Ders dışı çalışma</span>
+    <h1>İzle ve dinle</h1>
+    <p class="lead">Hiçbiri zorunlu değil; ödevde kullanırsanız kaynak olarak gösterin.</p>
+  </div>
+
+  <h2 class="h">Wittgenstein'a giriş</h2>
+  <div class="reslist">
+    <div class="res">
+      <span class="lang tr">TR</span>
+      <div>
+        <b><a href="https://www.youtube.com/watch?v=BYMSXUh6N3I" target="_blank" rel="noopener">Ludwig Wittgenstein ve Dil Oyunları — Tractatus ve Dil Felsefesi</a></b>
+        <p class="meta">Ender Özdemir &middot; 12 dakika 59 saniye</p>
+        <p>En kısa yol: iki dönem arasındaki kopuş ve dil oyunu kavramı. Derse gelmeden önce bakmak için yeterli.</p>
+      </div>
+    </div>
+    <div class="res">
+      <span class="lang tr">TR</span>
+      <div>
+        <b><a href="https://www.youtube.com/watch?v=WVzoLNxM_mg" target="_blank" rel="noopener">Felsefe «Boş Laf» mıdır? Wittgenstein'ın Anti-Felsefesi</a></b>
+        <p class="meta">Diamond Tema &middot; 35 dakika</p>
+        <p>Wittgenstein'ın felsefe anlayışı: sorunların çözülmesi değil çözülüp dağılması. Bugünkü «felsefe teori kurmaz, resmi gevşetir» yaklaşımının arka planı.</p>
+      </div>
+    </div>
+    <div class="res">
+      <span class="lang tr">TR</span>
+      <div>
+        <b><a href="https://www.youtube.com/watch?v=oOEq9jKvuvQ" target="_blank" rel="noopener">Dil Felsefesine Giriş (Frege, Russell, Wittgenstein)</a></b>
+        <p class="meta">PANDORA – FELSEFE &middot; 54 dakika</p>
+        <p>Alanın haritası. Wittgenstein'ı öncesiyle birlikte görmek isteyenler için.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="h">Dil oyunları, anlam ve özel dil (ileri)</h2>
+  <div class="reslist">
+    <div class="res">
+      <span class="lang tr">TR</span>
+      <div>
+        <b><a href="https://www.youtube.com/watch?v=r8xenkPB8Gg" target="_blank" rel="noopener">«Wittgenstein'da Dil Oyunları» — Prof. Dr. Zeki Özcan</a></b>
+        <p class="meta">Ankara Us Atölyesi &middot; 1 saat 23 saniye &middot; akademik konuşma</p>
+        <p>Dil oyunu kavramının metinden izlenerek açılması. Bölüm 6'daki tartışmanın ayrıntılı hâli.</p>
+      </div>
+    </div>
+    <div class="res">
+      <span class="lang tr">TR</span>
+      <div>
+        <b><a href="https://www.youtube.com/watch?v=qpHBIs_yecw" target="_blank" rel="noopener">Wittgenstein'da Dil ve Anlam — Dr. Sedat Bingöl</a></b>
+        <p class="meta">Ankara Felsefe Radyosu &middot; 1 saat 10 dakika &middot; Mayıs 2026</p>
+        <p>Anlam kuramı odaklı güncel bir seminer. Ödevin felsefi yansıtmasını anlam üzerine yazacaksanız bununla başlayın.</p>
+      </div>
+    </div>
+    <div class="res">
+      <span class="lang tr">TR</span>
+      <div>
+        <b><a href="https://www.youtube.com/watch?v=I0TEHaWrM1Y" target="_blank" rel="noopener">Başkalarının Zihni Olduğunu Nereden Biliyoruz? Wittgenstein'a Felsefi Bir Yolculuk</a></b>
+        <p class="meta">alper yz &middot; 21 dakika</p>
+        <p>Başkasının zihni sorunu ve özel dil argümanının bağlamı. Bölüm 9'u genişletir.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="h">Dil modelleri ve anlam tartışması</h2>
+  <div class="reslist">
+    <div class="res">
+      <span class="lang en">EN</span>
+      <div>
+        <b><a href="https://www.youtube.com/watch?v=R80kc5cwEUw" target="_blank" rel="noopener">Can language models understand? Bender and Koller argument</a></b>
+        <p class="meta">AI Coffee Break with Letitia &middot; 12 dakika 47 saniye</p>
+        <p>Ahtapot düşünce deneyinin ve biçim–anlam ayrımının en kısa anlatımı. Bölüm 7'nin ikinci yarısı.</p>
+      </div>
+    </div>
+    <div class="res">
+      <span class="lang en">EN</span>
+      <div>
+        <b><a href="https://www.youtube.com/watch?v=ZUIQYQXsEvw" target="_blank" rel="noopener">Stochastic Parrots — Emily M. Bender söyleşisi</a></b>
+        <p class="meta">Humans in the Loop &middot; 58 dakika &middot; Ağustos 2026</p>
+        <p>Tartışmanın bir tarafını kendi ağzından, güncel hâliyle dinlemek için. Karşı tarafı da okumadan görüş oluşturmayın.</p>
+      </div>
+    </div>
+    <div class="res">
+      <span class="lang en">EN</span>
+      <div>
+        <b><a href="https://www.anthropic.com/research/introspection" target="_blank" rel="noopener">Signs of introspection in large language models</a></b>
+        <p class="meta">Anthropic &middot; araştırma yazısı &middot; şekilli, okunaklı</p>
+        <p>Konsept enjeksiyonu deneyinin kendi anlatımı. Bölüm 9'daki şemanın kaynağı; sınırlar bölümünü atlamadan okuyun.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <p><b>Doğrulama notu:</b> Bu listedeki her bağlantı 14 Ekim 2026'da açıldı; başlık, kanal ve süre bilgisi teyit edildi. İçerikler baştan sona izlenmedi. Bağlantılar zamanla ölebilir; dönem ortasında bir kez kontrol edin.</p>
+    <p><b>Sosyal medya:</b> Bu haftanın konusunda, X ya da Instagram'da içeriği derste kullanılabilecek nitelikte, kaynağı doğrulanabilir tek bir gönderi bulamadım; doğrulayamadığım bağlantıyı listeye koymadım. Eklemek isterseniz <code>res</code> bloklarından birini kopyalayıp içeriğini değiştirin.</p>
+  </div>
+</section>
+
+<!-- ================= 14. KAYNAKLAR ================= -->
+<section class="section" id="kaynaklar" data-title="Kaynaklar" data-time="Ders sonrası" data-short="Kaynaklar">
+  <div class="sec-head">
+    <span class="sec-time">Ders sonrası okuma</span>
+    <h1>Kaynaklar</h1>
+    <p class="lead">Derste geçen her sayı ve her gönderme buradan doğrulanabilir.</p>
+  </div>
+
+  <div class="refs">
+    <h3>Felsefe</h3>
+    <ol>
+      <li>Wittgenstein L. <i>Philosophische Untersuchungen / Philosophical Investigations</i>. 1953. Derste kullanılan paragraflar: §1 (Augustinus pasajı ve eleştirisi), §23 (dil oyunlarının çokluğu), §43 (anlam ve kullanım), §66–67 (aile benzerliği), §185 (ikişer sayma sahnesi), §201–202 (kural izleme paradoksu ve pratik), §243–258 (özel dil), §293 (kutudaki böcek). Türkçesi: <i>Felsefi Soruşturmalar</i>, çev. Haluk Barışcan, Metis.</li>
+      <li>Wittgenstein L. <i>Tractatus Logico-Philosophicus</i>. 1921, önerme 5.6. Türkçesi: çev. Oruç Aruoba, Metis.</li>
+      <li>Augustinus. <i>Confessiones</i>, I, 8. <i>Soruşturmalar</i>'ın açılış alıntısının kaynağı.</li>
+      <li>Kripke SA. <i>Wittgenstein on Rules and Private Language</i>. Harvard University Press, 1982. Kural izleme paragraflarının tartışmalı ama etkili okuması.</li>
+      <li>Wason PC. On the failure to eliminate hypotheses in a conceptual task. <i>Quarterly Journal of Experimental Psychology</i>. 1960;12(3):129–140. Açılıştaki 2-4-6 oyununun kaynağı.</li>
+    </ol>
+
+    <h3>Dağılımsal anlam ve temellendirme</h3>
+    <ol start="6">
+      <li>Harris ZS. Distributional structure. <i>Word</i>. 1954;10(2–3):146–162.</li>
+      <li>Firth JR. A synopsis of linguistic theory 1930–1955. <i>Studies in Linguistic Analysis</i>. Blackwell, 1957. «You shall know a word by the company it keeps» cümlesinin kaynağı.</li>
+      <li>Harnad S. The symbol grounding problem. <i>Physica D</i>. 1990;42(1–3):335–346.</li>
+      <li>Bender EM, Koller A. Climbing towards NLU: on meaning, form, and understanding in the age of data. ACL 2020: 5185–5198. <a href="https://aclanthology.org/2020.acl-main.463/" target="_blank" rel="noopener">ACL Anthology</a> &mdash; ahtapot düşünce deneyi.</li>
+      <li>Chlapanis OS, Menis Mastromichalakis O, Papadimitriou CH. The grounding gap: how LLMs anchor the meaning of abstract concepts differently from humans. 9 Mayıs 2026. <a href="https://arxiv.org/abs/2605.08837" target="_blank" rel="noopener">arXiv:2605.08837</a> &mdash; 21 model, r = 0,37'ye karşı insan tavanı r &gt; 0,9.</li>
+    </ol>
+
+    <h3>Belirtim, yerel tanım ve belirsizlik</h3>
+    <ol start="11">
+      <li>Thota YR, Rafatirad S, Houman H, Nikoubin T. When models ignore definitions: measuring semantic override hallucinations in LLM reasoning. 19 Şubat 2026. <a href="https://arxiv.org/abs/2602.17520" target="_blank" rel="noopener">arXiv:2602.17520</a> &mdash; Lab 2'nin kaynağı; önbaskı, 30 görev, 3 model.</li>
+      <li>ClarEval: belirsiz talimatlar altında kod ajanlarının açıklama isteme becerisini ölçen ölçüt kümesi. 2026. <a href="https://arxiv.org/abs/2603.00187" target="_blank" rel="noopener">arXiv:2603.00187</a></li>
+      <li>Underspecification does not imply incoherence: the risks of semantic collapse in coding models. 2026. <a href="https://arxiv.org/abs/2607.01953" target="_blank" rel="noopener">arXiv:2607.01953</a></li>
+    </ol>
+
+    <h3>İç durum raporları ve yorumlanabilirlik</h3>
+    <ol start="14">
+      <li>Lindsey J. Emergent introspective awareness in large language models. Anthropic, 29 Ekim 2025; arXiv 5 Ocak 2026. <a href="https://www.anthropic.com/research/introspection" target="_blank" rel="noopener">anthropic.com</a> &middot; <a href="https://arxiv.org/abs/2601.01828" target="_blank" rel="noopener">arXiv:2601.01828</a></li>
+      <li>Emergent introspection does not replicate on Llama 3.1 405B. LessWrong, 2026. <a href="https://www.lesswrong.com/posts/gaMd2AdKSzbd4dsMj/emergent-introspection-does-not-replicate-on-llama-3-1-405b" target="_blank" rel="noopener">Bağımsız çoğaltma denemesi</a></li>
+      <li>Zou J, Sun X, Kong L, Wang T. A mechanistic study of language model introspection. 28 Eylül 2026. <a href="https://arxiv.org/abs/2609.35108" target="_blank" rel="noopener">arXiv:2609.35108</a></li>
+      <li>Pierucci F, Bracale Syrnikov M, Prandi M, Galisai M, Giarrusso F, Bisconti P. Xeno-interpretability: investigating the alien minds of LLMs. 17 Eylül 2026. <a href="https://arxiv.org/abs/2609.20408" target="_blank" rel="noopener">arXiv:2609.20408</a></li>
+    </ol>
+
+    <h3>Türkiye</h3>
+    <ol start="18">
+      <li>TÜBİTAK BİLGEM. Türkçe büyük dil modeli BİLGE, Türkiye Yapay Zekâ Zirvesi'nde tanıtıldı, 13 Haziran 2026; TÜBİTAK'ın modelin genel kullanıma açılmadığına dair açıklaması, Haziran 2026. <a href="https://uzmanpara.milliyet.com.tr/uzmanpara/turk-yapay-zekasi-bilge-gorucuye-cikiyor-7614375" target="_blank" rel="noopener">AA kaynaklı haber</a></li>
+    </ol>
+
+    <h3>Önceki haftalardan devam edenler</h3>
+    <ol start="19">
+      <li>Turpin M, Michael J, Perez E, Bowman SR. Language models don't always say what they think. NeurIPS 2023. <a href="https://arxiv.org/abs/2305.04388" target="_blank" rel="noopener">arXiv:2305.04388</a> &mdash; Hafta 2, sadakat.</li>
+      <li>Sclar M, Choi Y, Tsvetkov Y, Suhr A. Quantifying language models' sensitivity to spurious features in prompt design. ICLR 2024. <a href="https://arxiv.org/abs/2310.11324" target="_blank" rel="noopener">arXiv:2310.11324</a> &mdash; Hafta 2, biçim duyarlılığı.</li>
+      <li>Searle JR. Minds, brains, and programs. <i>Behavioral and Brain Sciences</i>. 1980;3(3):417–457. <span class="doi">doi:10.1017/S0140525X00005756</span></li>
+    </ol>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var ls = {
+    get:function(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
+    set:function(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  };
+
+  var sections = Array.prototype.slice.call(document.querySelectorAll(".section"));
+  var railList = document.getElementById("railList");
+  var mnav = document.getElementById("mnav");
+  var navOpts = [];
+  var idx = 0;
+
+  sections.forEach(function(s,i){
+    var teacherOnly = s.classList.contains("egitmen");
+    var li = document.createElement("li");
+    if(teacherOnly) li.className = "egitmen";
+    var b = document.createElement("button");
+    b.type = "button";
+    b.innerHTML = '<span class="dot"></span><span class="lbl"><b></b><small></small></span>';
+    b.querySelector(".dot").textContent = i;
+    b.querySelector("b").textContent = s.dataset.short || s.dataset.title;
+    b.querySelector("small").textContent = s.dataset.time || "";
+    b.addEventListener("click", function(){ go(i); });
+    li.appendChild(b);
+    railList.appendChild(li);
+
+    var o = document.createElement("option");
+    o.value = String(i);
+    o.textContent = (s.dataset.time ? s.dataset.time+" — " : "") + (s.dataset.title||"");
+    if(teacherOnly) o.dataset.teacher = "1";
+    navOpts.push(o);
+    mnav.appendChild(o);
+  });
+
+  function visible(i){
+    var s = sections[i];
+    return !!s && (document.body.dataset.mode === "egitmen" || !s.classList.contains("egitmen"));
+  }
+  function go(i, dir){
+    if(i<0||i>=sections.length) return;
+    if(!visible(i)){ var step = dir || 1; return go(i+step, step); }
+    idx = i;
+    sections.forEach(function(s,j){ s.classList.toggle("active", j===i); });
+    var btns = railList.querySelectorAll("button");
+    for(var k=0;k<btns.length;k++){
+      if(k===i) btns[k].setAttribute("aria-current","step"); else btns[k].removeAttribute("aria-current");
+      btns[k].classList.toggle("done", k<i);
+    }
+    mnav.value = String(i);
+    window.scrollTo({top:0, behavior:"auto"});
+  }
+  mnav.addEventListener("change", function(){ go(parseInt(mnav.value,10)||0); });
+  document.addEventListener("keydown", function(e){
+    var t = e.target;
+    if(t && (t.tagName==="INPUT"||t.tagName==="TEXTAREA"||t.tagName==="SELECT")) return;
+    if(e.key==="ArrowRight") go(idx+1, 1);
+    if(e.key==="ArrowLeft") go(idx-1, -1);
+  });
+
+  var modeBtn = document.getElementById("modeBtn");
+  function setMode(m){
+    document.body.dataset.mode = m;
+    modeBtn.setAttribute("aria-pressed", m==="egitmen" ? "true" : "false");
+    navOpts.forEach(function(o){ o.hidden = (m !== "egitmen" && o.dataset.teacher === "1"); });
+    ls.set("uec248w3.mode", m);
+    if(!visible(idx)) go(idx+1, 1);
+  }
+  modeBtn.addEventListener("click", function(){
+    setMode(document.body.dataset.mode==="egitmen" ? "ogrenci" : "egitmen");
+  });
+  var scale = parseFloat(ls.get("uec248w3.scale")||"1") || 1;
+  function setScale(v){
+    scale = Math.min(1.6, Math.max(.8, Math.round(v*20)/20));
+    document.documentElement.style.setProperty("--scale", String(scale));
+    ls.set("uec248w3.scale", String(scale));
+  }
+  document.getElementById("fontUp").addEventListener("click", function(){ setScale(scale+.1); });
+  document.getElementById("fontDown").addEventListener("click", function(){ setScale(scale-.1); });
+
+  var plan = [
+    [0,"Açılış: 2-4-6"],[5,"Etiket mi?"],[12,"Kural izleme"],[20,"Lab 1"],[34,"Ara"],
+    [44,"Anlam = kullanım"],[52,"Aile benzerliği"],[60,"Lab 2"],[74,"Özel dil"],[84,"Xeno-temsil"],
+    [90,"Kapanış"],[100,"Bitti"]
+  ];
+  var clockStart = null, clockTick = null;
+  var clockT = document.getElementById("clockT"), clockSeg = document.getElementById("clockSeg"),
+      clockBtn = document.getElementById("clockBtn");
+  function pad(n){ return (n<10?"0":"")+n; }
+  function renderClock(){
+    var sec = clockStart ? Math.floor((Date.now()-clockStart)/1000) : 0;
+    clockT.textContent = pad(Math.floor(sec/60))+":"+pad(sec%60);
+    var min = sec/60, label = plan[0][1];
+    for(var i=0;i<plan.length;i++){ if(min>=plan[i][0]) label = plan[i][1]; }
+    clockSeg.textContent = "Plan: "+label;
+  }
+  clockBtn.addEventListener("click", function(){
+    if(clockStart){ clockStart=null; clearInterval(clockTick); clockTick=null; clockBtn.textContent="Dersi başlat"; renderClock(); }
+    else { clockStart=Date.now(); clockTick=setInterval(renderClock,1000); clockBtn.textContent="Durdur"; renderClock(); }
+  });
+  renderClock();
+
+  document.querySelectorAll(".timer").forEach(function(el){
+    var total = parseInt(el.dataset.sec,10)||300, left = total, run = null;
+    el.innerHTML = '<span class="tl"></span><span class="td"></span>'+
+      '<button type="button" data-a="start">Başlat</button>'+
+      '<button type="button" data-a="reset">Sıfırla</button>';
+    el.querySelector(".tl").textContent = el.dataset.label || "Etkinlik";
+    var td = el.querySelector(".td");
+    function draw(){
+      var s = Math.abs(left);
+      td.textContent = (left<0?"-":"")+pad(Math.floor(s/60))+":"+pad(s%60);
+      el.classList.toggle("ending", left<=30 && left>0);
+      el.classList.toggle("over", left<=0);
+    }
+    el.addEventListener("click", function(e){
+      var a = e.target && e.target.dataset ? e.target.dataset.a : null;
+      if(a==="start"){
+        if(run){ clearInterval(run); run=null; e.target.textContent="Başlat"; }
+        else { run=setInterval(function(){ left--; draw(); },1000); e.target.textContent="Duraklat"; }
+      } else if(a==="reset"){
+        if(run){ clearInterval(run); run=null; }
+        var sb = el.querySelector('[data-a="start"]'); if(sb) sb.textContent="Başlat";
+        left=total; draw();
+      }
+    });
+    draw();
+  });
+
+  document.querySelectorAll(".copy").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var box = btn.closest(".codebox");
+      var pre = box ? box.querySelector("pre") : null;
+      if(!pre) return;
+      var text = pre.textContent;
+      function ok(){ btn.textContent="Kopyalandı"; btn.classList.add("ok");
+        setTimeout(function(){ btn.textContent="Kopyala"; btn.classList.remove("ok"); },1400); }
+      function fallback(){
+        try{
+          var r = document.createRange(); r.selectNodeContents(pre);
+          var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+          btn.textContent="Seçildi, Ctrl+C";
+          setTimeout(function(){ btn.textContent="Kopyala"; },2200);
+        }catch(e){}
+      }
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(ok, fallback);
+      } else { fallback(); }
+    });
+  });
+
+  document.querySelectorAll(".vote").forEach(function(wrap){
+    var key = "uec248w3."+wrap.id;
+    var opts = (wrap.dataset.opts||"").split("|");
+    var counts;
+    try{ counts = JSON.parse(ls.get(key)||"null"); }catch(e){ counts=null; }
+    if(!counts || counts.length!==opts.length) counts = opts.map(function(){ return 0; });
+
+    opts.forEach(function(label,i){
+      var row = document.createElement("div");
+      row.className = "vopt";
+      row.innerHTML = '<span class="vl"></span><span class="track"><span class="fill"></span></span>'+
+        '<span class="cnt"></span><span class="pm"><button type="button" data-d="-1" aria-label="azalt">&minus;</button>'+
+        '<button type="button" data-d="1" aria-label="artır">+</button></span>';
+      row.querySelector(".vl").innerHTML = label;
+      row.addEventListener("click", function(e){
+        var d = e.target && e.target.dataset ? e.target.dataset.d : null;
+        if(!d) return;
+        counts[i] = Math.max(0, counts[i] + parseInt(d,10));
+        save(); draw();
+      });
+      wrap.appendChild(row);
+    });
+    function save(){ ls.set(key, JSON.stringify(counts)); }
+    function draw(){
+      var total = counts.reduce(function(a,b){ return a+b; },0);
+      var max = Math.max.apply(null, counts.concat([1]));
+      wrap.querySelectorAll(".vopt").forEach(function(row,i){
+        row.querySelector(".fill").style.width = (counts[i]/max*100)+"%";
+        var pct = total ? Math.round(counts[i]/total*100) : 0;
+        row.querySelector(".cnt").textContent = counts[i] + (total ? " · %"+pct : "");
+      });
+    }
+    var rst = document.querySelector('[data-resetcount="'+wrap.id+'"]');
+    if(rst) rst.addEventListener("click", function(){
+      counts = counts.map(function(){ return 0; }); save(); draw();
+    });
+    draw();
+  });
+
+  document.querySelectorAll(".plate .mono-img").forEach(function(box){
+    var img = box.querySelector("img"), ini = box.querySelector(".initial");
+    if(!img || !ini) return;
+    var plate = box.closest(".plate"), credit = plate ? plate.querySelector(".credit") : null;
+    var triedRemote = false;
+    function ok(){
+      if(img.naturalWidth > 0){
+        img.hidden = false; ini.hidden = true;
+        if(credit && triedRemote) credit.hidden = false;
+      }
+    }
+    function fail(){
+      var remote = img.getAttribute("data-remote");
+      if(remote && !triedRemote){ triedRemote = true; img.src = remote; return; }
+      img.hidden = true; ini.hidden = false;
+      if(credit) credit.hidden = true;
+    }
+    img.addEventListener("load", ok);
+    img.addEventListener("error", fail);
+    if(img.complete){ if(img.naturalWidth > 0) ok(); else fail(); }
+  });
+
+  setMode(ls.get("uec248w3.mode")==="egitmen" ? "egitmen" : "ogrenci");
+  setScale(scale);
+  go(1);
+})();
+</script>
